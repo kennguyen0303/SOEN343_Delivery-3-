@@ -12,7 +12,7 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
     this.status = "closed";// for doorsm windows and lights
     if (move_mode == "image") {//for human stick
         this.image = new Image();
-        this.image.src = "human_stick.png";
+        this.image.src = "../pictures/human_stick.png";
         this.name=color;//set the name
         this.location="outside";//Initialize at outside
         this.id="";//user id
@@ -25,7 +25,7 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
     }
     if (move_mode == "light") {
         this.image = new Image();
-        this.image.src = "off_bulb.png";
+        this.image.src = "../pictures/off_bulb.png";
         this.name=color;//set the name
         this.image.onload=()=>{
             ctx.drawImage(this.image, 
