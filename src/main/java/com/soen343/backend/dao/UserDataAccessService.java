@@ -1,5 +1,6 @@
 package com.soen343.backend.dao;
 
+import com.soen343.backend.exceptions.UserNotFoundException;
 import com.soen343.backend.factory.UserTypeFactory;
 import com.soen343.backend.model.User;
 import com.soen343.backend.utilities.UserPermissions;
@@ -61,12 +62,12 @@ public class UserDataAccessService implements UserDAO {
      * @return an Integer, 1 if no user was found and the operation fails or 1 if the operating is successful
      */
     @Override
-    public int deleteUserById(UUID id) {
+    public int deleteUserById(UUID id) throws UserNotFoundException {
         Optional<User> user = selectUserById(id);
 
         if(user.isEmpty())
         {
-            return 0; // indicates that no user was found and deleted
+            throw new UserNotFoundException("User to delete not found"); // indicates that no user was found and deleted
         }
 
         DB.remove(user.get());
@@ -100,13 +101,13 @@ public class UserDataAccessService implements UserDAO {
      * @return an Integer, 1 if no user was found and the operation fails or 1 if the operating is successful
      */
     @Override
-    public int loginUser(UUID id) {
+    public int loginUser(UUID id) throws UserNotFoundException {
 
         Optional<User> userToLogIn = selectUserById(id);
 
         if(userToLogIn.isEmpty())
         {
-            return 0; // indicates that no user was found and no action was taken
+            throw new UserNotFoundException("User to login not found"); // indicates that no user was found and no action was taken
         }
         Optional<User> currentLoggedInUser = findCurrentLoggedInUser();
 
@@ -140,13 +141,14 @@ public class UserDataAccessService implements UserDAO {
      * @return an Integer, 1 if no user was found and the operation fails or 1 if the operating is successful
      */
     @Override
-    public int setUserLocation(UUID id, String location) {
+    public int setUserLocation(UUID id, String location) throws UserNotFoundException {
 
         Optional<User> user = selectUserById(id);
 
         if(user.isEmpty())
         {
-            return 0; // indicates that no user was found and no action was taken
+            throw new UserNotFoundException("User not found to set location");
+            // indicates that no user was found and no action was taken
         }
 
         user.get().setLocation(location);
@@ -161,13 +163,13 @@ public class UserDataAccessService implements UserDAO {
      * @return int 1 if successful and 0 if failed or no change
      */
     @Override
-    public int grantUserPermissions(UUID id, String permission, boolean value)
+    public int grantUserPermissions(UUID id, String permission, boolean value) throws UserNotFoundException
     {
         Optional<User> user = findCurrentLoggedInUser();
         Optional<User> userToGetPermissions = selectUserById(id);
         if(user.isEmpty() || userToGetPermissions.isEmpty())
         {
-            return 0;
+            throw new UserNotFoundException("User not found when granting permission");
         }
 
         if(user.get().grantPermissions(userToGetPermissions.get(), permission, value))
