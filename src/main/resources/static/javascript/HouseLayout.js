@@ -93,25 +93,15 @@ function loadCanvas(){
                 this.context = this.canvas.getContext("2d");
                 this.interval;
                 //load all element once
-                light_array.forEach(a_light => {
-                    a_light.update();
-                    });
-                    door_array.forEach(a_door => {
-                        a_door.newPos();
-                        a_door.update();
-                    });
-                    window_array.forEach(a_window => {
-                        a_window.newPos();
-                        a_window.update();
-                    });
-                    window.addEventListener('keydown', function (e) {
-                        isOn = document.getElementById("slider").checked;
-                        myGameArea.key = e.keyCode;
-                        if (isOn) {
-                            this.interval = setInterval(updateGameArea, 20);
-                            timerStack.push(this.interval);
-                        }
-                    })
+                updateAll();
+                window.addEventListener('keydown', function (e) {
+                isOn = document.getElementById("slider").checked;
+                myGameArea.key = e.keyCode;
+                if (isOn) {
+                    this.interval = setInterval(moveUser, 20);
+                    timerStack.push(this.interval);
+                    }
+                })
                     window.addEventListener('keyup', function (e) {
                         myGameArea.key = false;
                         while(timerStack.length>0){
@@ -161,7 +151,7 @@ function startGame() {
 }
 
 
-function updateGameArea() {
+function moveUser() {
     myGameArea.clear("image"); 
     user_array.forEach(user => {
         user.speedX=0;
@@ -182,7 +172,6 @@ function updateGameArea() {
         user_array[option].speedY = 1;
     }
         
-    //update the new position for every door, otherwise it will not be shown
     var count=0;
     user_array.forEach(user => {
         user.newPos();    
@@ -228,4 +217,18 @@ function updateGameArea() {
         });
         
     });
+}
+
+function updateAll(){
+    light_array.forEach(a_light => {
+        a_light.update();
+        });
+        door_array.forEach(a_door => {
+            a_door.newPos();
+            a_door.update();
+        });
+        window_array.forEach(a_window => {
+            a_window.newPos();
+            a_window.update();
+        });
 }
