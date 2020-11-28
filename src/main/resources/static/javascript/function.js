@@ -287,7 +287,7 @@ var room_array=[];//array for the rooms
                         //print the door
                         if(key1=="light"){
                             //each [key2] is an object of a door
-                            var temp_door = new door(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
+                            var temp_door = new Light(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
                             light_array.push(temp_door);
                             room_array.forEach(a_room => {
                                 var room_name=a_room.getName();
@@ -362,23 +362,6 @@ function updateGameArea() {
     if (myGameArea.key && myGameArea.key == 40) {//move down
         user_array[option].speedY = 1;
     }
-    // if (myGameArea.key && myGameArea.key == 37) {//move left
-    //     if(door_array[option].move_mode=="horizontal")
-    //         if(door_array[option].x>door_array[option].boundary[0]) door_array[option].speedX = -1;
-    //      }
-    // if (myGameArea.key && myGameArea.key == 38) {//move up
-    //     if(door_array[option].move_mode=="vertical") 
-    //     if(door_array[option].y>door_array[option].boundary[0]) door_array[option].speedY = -1;
-    //     }  
-    // if (myGameArea.key && myGameArea.key == 39) {//move right
-    //     if(door_array[option].move_mode=="horizontal") 
-    //     if(door_array[option].x<door_array[option].boundary[1]) door_array[option].speedX = 1;
-    // }
-    // if (myGameArea.key && myGameArea.key == 40) {//move down
-    //     if(door_array[option].move_mode=="vertical") 
-    //     if(door_array[option].y<door_array[option].boundary[1]) door_array[option].speedY = 1;
-    
-    // }
         
     //key in control is the update function
     //update the now position for every door, otherwise it will not be shown
@@ -387,6 +370,7 @@ function updateGameArea() {
         user.newPos();    
         user.update();
         //update location ?
+        //---@TODO-D3: NEED METHOD EXTRACT todo
         room_array.forEach(a_room => {
             if(user.location!= a_room.getName()){
                 if(a_room.insideRoom(user)){//if the user is inside a room
@@ -573,7 +557,7 @@ function placeUser(){
     }
 
     //place img in the layout
-    var selectedUser = new door(15, 20, "", positionX, positionY, "image");
+    var selectedUser = new humanStick(15, 20, "", positionX, positionY);
     selectedUser.id=userID;//store ID 
     user_array.push(selectedUser);//push into the array
 

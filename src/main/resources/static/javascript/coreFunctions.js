@@ -31,6 +31,7 @@ function lightAction(debugText)
  * Showing the control for the door
  */
 function showDoorController(){
+    //declare the 
     var container = document.createElement("div");
     var door_name_array=["bathroom","bedroom","backyard", "kitchen","garage_inside","entrance","garage_outside"];
     var element = document.getElementById("SHCore");
