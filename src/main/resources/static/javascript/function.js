@@ -242,93 +242,93 @@ function changeTabs(evt, SmartHomeTab) {
 }
 
 //Ken function for layout
-var door_array=[];//the array for doors !
-var locked_array_door= [ "false", "false", "false","false", "false","false", "false","false"];
-var locked_array_window=["false", "false"];
-var light_array=[];//array for lights
-var window_array=[];//array for window
-var room_array=[];//array for the rooms
-   function renderLayout()//a function for rendering the layout of the house
-   {
-        var xmlhttp = new XMLHttpRequest();//creating a request for AJAX to load the layout
-            xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {//when the layout file is successfully loaded, executes the below codes
-                myObj = JSON.parse(this.responseText);//parse the JSON data to an JAvascript object
-                var canvas = document.getElementById("myCanvas");//define the area to draw
-                var ctx = canvas.getContext("2d");//a syntax concept, check the w3school
-                //drawing starts here
-                for (var key1 of Object.keys(myObj)) {//loop over each room in the JSON file, syntax here: loop over an object
-                    for (var key2 of Object.keys(myObj[key1])) {//loop over each element of a room
-                        //print room_name p/s: hardcode name position need to fix later
-                        if(key2=="name"){//if the element is "name", need to print out
-                            var temp_room=new room();//initialize a room
-                            temp_room.setName(myObj[key1][key2][0]);//set the name for the room
-                            ctx.font = "15px Arial";//set the font
-                            ctx.fillText(myObj[key1][key2][0],myObj[key1][key2][1],myObj[key1][key2][2]);//format: [0]=room name, [1]: width, [2]: height
-                            continue;//move on the other keys
-                        }
-                        //print the door
-                        if(key1=="door"){
-                            //each [key2] is an object of a door
-                            var temp_door = new door(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
-                            if( myObj[key1][key2][2]=="red") {
-                                door_array.push(temp_door);//add door
-                                room_array.forEach(a_room => {
-                                    var room_name=a_room.getName();
-                                    if(key2.includes(room_name))
-                                        a_room.add_door(door_array.length-1);//take the index of the door
-                                });
-                            }
-                            if( myObj[key1][key2][2]=="blue") {
-                                window_array.push(temp_door);//add window 
-                            }
-                            continue;
-                        }
-                        //print the door
-                        if(key1=="light"){
-                            //each [key2] is an object of a door
-                            var temp_door = new Light(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
-                            light_array.push(temp_door);
-                            room_array.forEach(a_room => {
-                                var room_name=a_room.getName();
-                                if(key2.includes(room_name))
-                                    a_room.add_light(light_array.length-1);//take the index of the door
-                            });
-                            continue;
-                        }
-                        //draw the wall for a room
-                        for(var i=0;i<myObj[key1][key2].length;i=i+4){
-                            //store the height and width of a room
-                            if(key2=="top"){
-                                temp_room.set_min_height(myObj[key1][key2][1]);//the first point
-                                temp_room.set_min_width(myObj[key1][key2][0]);//the first point
-                                var last_index=myObj[key1][key2].length-1;
-                                temp_room.set_max_width(myObj[key1][key2][last_index-1]);//consult the layout.json to know why -1
-                            }
-                            if(key2=="left"){
-                                var last_index=myObj[key1][key2].length-1;
-                                temp_room.set_max_height(myObj[key1][key2][last_index]);
-                            }
-                            ctx.moveTo(myObj[key1][key2][i],myObj[key1][key2][i+1]);
-                            ctx.lineTo(myObj[key1][key2][i+2],myObj[key1][key2][i+3]);
-                            ctx.stroke();
+// var door_array=[];//the array for doors !
+// var locked_array_door= [ "false", "false", "false","false", "false","false", "false","false"];
+// var locked_array_window=["false", "false"];
+// var light_array=[];//array for lights
+// var window_array=[];//array for window
+// var room_array=[];//array for the rooms
+//    function renderLayout()//a function for rendering the layout of the house
+//    {
+//         var xmlhttp = new XMLHttpRequest();//creating a request for AJAX to load the layout
+//             xmlhttp.onreadystatechange = function() {
+//             if (this.readyState == 4 && this.status == 200) {//when the layout file is successfully loaded, executes the below codes
+//                 myObj = JSON.parse(this.responseText);//parse the JSON data to an JAvascript object
+//                 var canvas = document.getElementById("myCanvas");//define the area to draw
+//                 var ctx = canvas.getContext("2d");//a syntax concept, check the w3school
+//                 //drawing starts here
+//                 for (var key1 of Object.keys(myObj)) {//loop over each room in the JSON file, syntax here: loop over an object
+//                     for (var key2 of Object.keys(myObj[key1])) {//loop over each element of a room
+//                         //print room_name p/s: hardcode name position need to fix later
+//                         if(key2=="name"){//if the element is "name", need to print out
+//                             var temp_room=new room();//initialize a room
+//                             temp_room.setName(myObj[key1][key2][0]);//set the name for the room
+//                             ctx.font = "15px Arial";//set the font
+//                             ctx.fillText(myObj[key1][key2][0],myObj[key1][key2][1],myObj[key1][key2][2]);//format: [0]=room name, [1]: width, [2]: height
+//                             continue;//move on the other keys
+//                         }
+//                         //print the door
+//                         if(key1=="door"){
+//                             //each [key2] is an object of a door
+//                             var temp_door = new door(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
+//                             if( myObj[key1][key2][2]=="red") {
+//                                 door_array.push(temp_door);//add door
+//                                 room_array.forEach(a_room => {
+//                                     var room_name=a_room.getName();
+//                                     if(key2.includes(room_name))
+//                                         a_room.add_door(door_array.length-1);//take the index of the door
+//                                 });
+//                             }
+//                             if( myObj[key1][key2][2]=="blue") {
+//                                 window_array.push(temp_door);//add window 
+//                             }
+//                             continue;
+//                         }
+//                         //print the door
+//                         if(key1=="light"){
+//                             //each [key2] is an object of a door
+//                             var temp_door = new Light(myObj[key1][key2][0], myObj[key1][key2][1], myObj[key1][key2][2], myObj[key1][key2][3], myObj[key1][key2][4],myObj[key1][key2][5]);
+//                             light_array.push(temp_door);
+//                             room_array.forEach(a_room => {
+//                                 var room_name=a_room.getName();
+//                                 if(key2.includes(room_name))
+//                                     a_room.add_light(light_array.length-1);//take the index of the door
+//                             });
+//                             continue;
+//                         }
+//                         //draw the wall for a room
+//                         for(var i=0;i<myObj[key1][key2].length;i=i+4){
+//                             //store the height and width of a room
+//                             if(key2=="top"){
+//                                 temp_room.set_min_height(myObj[key1][key2][1]);//the first point
+//                                 temp_room.set_min_width(myObj[key1][key2][0]);//the first point
+//                                 var last_index=myObj[key1][key2].length-1;
+//                                 temp_room.set_max_width(myObj[key1][key2][last_index-1]);//consult the layout.json to know why -1
+//                             }
+//                             if(key2=="left"){
+//                                 var last_index=myObj[key1][key2].length-1;
+//                                 temp_room.set_max_height(myObj[key1][key2][last_index]);
+//                             }
+//                             ctx.moveTo(myObj[key1][key2][i],myObj[key1][key2][i+1]);
+//                             ctx.lineTo(myObj[key1][key2][i+2],myObj[key1][key2][i+3]);
+//                             ctx.stroke();
                             
-                        }
-                    };//finish rendering a room
-                    if(key1!=="door"&&key1!=="light") {
+//                         }
+//                     };//finish rendering a room
+//                     if(key1!=="door"&&key1!=="light") {
 
-                        room_array.push(temp_room);//add the room to the array
+//                         room_array.push(temp_room);//add the room to the array
                        
 
-                    }
-                };
-                startGame();//start the movement, challenge: Need to click to render door
-            }
-        };
-        xmlhttp.open("GET", "layout.json", true);
-        xmlhttp.send();
+//                     }
+//                 };
+//                 startGame();//start the movement, challenge: Need to click to render door
+//             }
+//         };
+//         xmlhttp.open("GET", "layout.json", true);
+//         xmlhttp.send();
             
-   }
+//    }
    //try the game code from w3school with some modification, check w3school for more detials
   
    var option;
