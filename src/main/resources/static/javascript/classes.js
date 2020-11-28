@@ -128,7 +128,7 @@ function room(){
 
 }
 
-//ADDING
+//ADDING for D3
 
 
 class humanStick extends door{

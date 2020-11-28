@@ -1,42 +1,4 @@
-//Nathan+Abdala function
-
-
-function changeTabs(evt, SmartHomeTab) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(SmartHomeTab).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-  
-
-//--------------------------------------
-//alex functions
-function showContext() {
-    document.getElementById('SHSystem').style.display = 'none';
-}
-
 //************Function for Alex part prepared by Ken  */
-
-function openForm() {
-    document.getElementById("myForm").style.display = "block";
-  }
-  
-  function closeForm() {
-    document.getElementById("myForm").style.display = "none";
-  }
 
   var xAxis = 0;
   var yAxis = 0;
@@ -78,33 +40,27 @@ function openForm() {
     }
     if(xAxis>285 && xAxis<310 && yAxis>260 && yAxis<315) {
         //change the boundary of kitchen
-        //door_array[3].boundary = [door_array[3].y, yAxis-20];
         locked_array_door[3] = "true";
     }
     if(xAxis>210 && xAxis<225 && yAxis>260 && yAxis<300) {
         //change the boundary of garage inside
-        //door_array[3].boundary = [door_array[3].y, yAxis-20];
         locked_array_door[4] = "true";
     }
     if(xAxis>235 && xAxis<255 && yAxis>340 && yAxis<360) {
         //change the boundary of entrance
-        //door_array[3].boundary = [door_array[3].y, yAxis-20];
         locked_array_door[5] = "true";
     }
     if(xAxis>135 && xAxis<155 && yAxis>340 && yAxis<360) {
         //change the boundary of garage outside
-        //door_array[3].boundary = [door_array[3].y, yAxis-20];
         locked_array_door[6] = "true";
     }
     if(xAxis>390 && xAxis<410 && yAxis>60 && yAxis<115){
         //change the boundary of window room
-        //door_array[1].boundary = [door_array[1].y, yAxis-20];
         locked_array_window[0] = "true";
 
     }
     if(xAxis>390 && xAxis<410 && yAxis>260 && yAxis<315){
         //change the boundary of window room
-        //door_array[1].boundary = [door_array[1].y, yAxis-20];
         locked_array_window[1] = "true";
 
     }
@@ -213,43 +169,6 @@ function updateLocationToBackend(user){
     xhttp.send();
     UserObserver.update();
 }
-var varCurrentTime = new Date();
-
-function refreshTime() {
-    setInterval(() => {
-        //currentTime + 1
-        tikTok();
-    }, 1000);
-}
-
-function newTime() {
-	var y = prompt("enter a year (October 13, 2014 11:13:00)", 0);
-	varCurrentTime = new Date(y);
-}
-
-function tikTok() {
-
-    var second = varCurrentTime.getSeconds() + 1;
-    varCurrentTime.setSeconds(second);
-    document.getElementById('time').innerHTML = varCurrentTime.toLocaleString("en-US");
-
-    if (document.getElementById('awayModeButton').innerHTML == 'ON') {
-        if (lightSchedule.length == 0) {
-            return;
-        }
-        else{
-            var timeNow = new CurrentTime();
-            var timeObserver = new TimeObserver();
-            timeNow.addObserver(timeObserver)
-            timeNow.setCurrentTime();
-        }
-        
-    }
-    
-
-}
-
-// CONFLICT RESOLVED !
 
 //user should be able to set the time to pass before sending notification
 var eclipsedTime = 0;

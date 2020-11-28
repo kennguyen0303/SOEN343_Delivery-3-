@@ -86,7 +86,7 @@ function renderLayout()//a function for rendering the layout of the house
 */
 function loadCanvas(){
     timerStack=[];//a stack for timer
-    document.getElementById("defaultOpen").click(); //choose SHS on load
+    document.getElementById("defaultOpen").click(); //choose SHS on load of the page
     myGameArea = {
             canvas: document.getElementById("myCanvas"),
             start: function () {
