@@ -172,7 +172,7 @@ function moveUser() {
         user_array[option].speedY = 1;
     }
         
-    var count=0;
+    var count=0;//referencing the index from global array user_array
     user_array.forEach(user => {
         user.newPos();    
         user.update();

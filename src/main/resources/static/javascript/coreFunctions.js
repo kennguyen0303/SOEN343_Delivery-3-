@@ -113,7 +113,7 @@ function showLightController(){
     element.appendChild(container);
     showLightAutoMode();
 }
-var autoMode=false;//boolean for auto mode
+
 /**
  * showing button to set lights on Auto mode
  */

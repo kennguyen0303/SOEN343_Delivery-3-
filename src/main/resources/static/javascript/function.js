@@ -80,7 +80,7 @@ function resetCoordinates() {
     renderLayout();
 }
 
-var user_array=[];//an array for controlling the user in the house
+
 function placeUser(){
     //obtain the user
     var userIndex = document.getElementById('currentUsersList2').selectedIndex;
@@ -127,8 +127,6 @@ function placeUser(){
     var selectedUser = new humanStick(15, 20, "", positionX, positionY);
     selectedUser.id=userID;//store ID 
     user_array.push(selectedUser);//push into the array
-
-    //by Ken
     var temp_element=document.createElement("option");
     var element = document.getElementById("control_option");//access the dropdown box
     temp_element.value=user_array.length;
