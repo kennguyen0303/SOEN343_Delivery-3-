@@ -154,4 +154,78 @@ function loadCanvas(){
                 }
             }
     
+}
+
+function startGame() {
+    myGameArea.start();
+}
+
+
+function updateGameArea() {
+    myGameArea.clear("image"); 
+    user_array.forEach(user => {
+        user.speedX=0;
+        user.speedY=0;
+    });
+    var option = document.getElementById("control_option").value - 1;//minus 1 since array start from 0
+    //Moving the human stick 
+    if (myGameArea.key && myGameArea.key == 37) {//move left
+        user_array[option].speedX = -1;
     }
+    if (myGameArea.key && myGameArea.key == 38) {//move up
+        user_array[option].speedY = -1;
+    }
+    if (myGameArea.key && myGameArea.key == 39) {//move right
+        user_array[option].speedX = 1;
+    }
+    if (myGameArea.key && myGameArea.key == 40) {//move down
+        user_array[option].speedY = 1;
+    }
+        
+    //update the new position for every door, otherwise it will not be shown
+    var count=0;
+    user_array.forEach(user => {
+        user.newPos();    
+        user.update();
+        //update location ?
+        //---@TODO-D3: NEED METHOD EXTRACT todo
+        room_array.forEach(a_room => {
+            if(user.location!= a_room.getName()){
+                if(a_room.insideRoom(user)){//if the user is inside a room
+                    if(!a_room.get_occupant_list().includes(count)){//first time walk into the room
+                        a_room.add_occupant(count);
+                        //turn on light in the room on AUTO MODE
+                        if(autoMode){
+                            console.log("turning on light AUTO! ");
+                            a_room.light_index_array.forEach(an_index => {
+                                turnOnLight(an_index);
+                            });
+                        }
+                    user.location=a_room.getName();//update the location
+                    updateLocationToBackend(user);
+                    console.log("New location detected: "+user.location+"New number detected: "+a_room.getNumberOfOccupant());
+                    } 
+                }
+                else{//not inside the room
+                    if(a_room.get_occupant_list().includes(count)){//not inside the room, but still on the list
+                        a_room.remove_occupant(count);//remove the index from the list
+                    }
+                    if(autoMode && a_room.getNumberOfOccupant()==0){//turn off if empty
+                        a_room.light_index_array.forEach(an_index => {
+                            turnOffLight(an_index);
+                        });
+                    }
+                }
+            }
+            else{//if the location matches a room, but not inside the room, in transition
+                if(!a_room.insideRoom(user)){
+                    user.location="outside";//update the location
+                    updateLocationToBackend(user);
+                    console.log("New location detected: "+user.location);
+                }
+            }
+            count++;
+        });
+        
+    });
+}

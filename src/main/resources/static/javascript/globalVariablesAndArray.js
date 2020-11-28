@@ -4,3 +4,4 @@ var locked_array_window=["false", "false"];
 var light_array=[];//array for lights
 var window_array=[];//array for window
 var room_array=[];//array for the rooms
+var option;
