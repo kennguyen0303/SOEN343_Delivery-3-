@@ -1,5 +1,6 @@
 class Zone{
-    constructor(rooms, periodicTempSetting){
+    constructor(zoneID, rooms, periodicTempSettings){
+        this.zoneID = zoneID;
         this.rooms = rooms;
         this.periodicTempSettings = periodicTempSettings;
     }
@@ -61,5 +62,52 @@ class PeriodicTempSetting {
         else{
             return false;
         }
+    }
+}
+
+class Room{
+    constructor(name, temperature){
+        this.name = name;
+        this.temperature = temperature;
+    }
+
+    getName(){
+        return this.name;
+    }
+
+    getTemperature(){
+        return this.temperature;
+    }
+
+    // should we allow the user to set the name of a room?
+    setName(name){
+        this.name = name;
+    }
+
+    setTemperature(newTemp){
+        this.temperature = newTemp;
+    }
+}
+
+class SHH{
+    constructor(zones){
+        this.zones = zones;
+    }
+
+    getAllZones(){
+        return zones;
+    }
+
+    getZoneById(id){
+        this.forEach(zone => {
+            if (zone.zoneID == id) {
+                return zone;
+            }
+        });
+        alert("the zone is not found, please the ID.");
+    }
+
+    setZoneById(id, ){
+
     }
 }
