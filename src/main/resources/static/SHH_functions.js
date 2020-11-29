@@ -90,8 +90,8 @@ class Room{
 }
 
 class SHH{
-    constructor(zones){
-        this.zones = zones;
+    constructor(outdoorTemp){
+        this.outdoorTemp = outdoorTemp;
     }
 
     getAllZones(){
@@ -107,7 +107,18 @@ class SHH{
         alert("the zone is not found, please the ID.");
     }
 
-    setZoneById(id, ){
+    addZone(newZone){
+        this.zones.push(newZone);
+    }
 
+    deleteZoneById(id){
+        for (let i = 0; i < this.zones.length; i++) {
+            const zone = this.zones[i];
+            if (zone.zoneID == id) {
+                this.splice(i, 1);
+                return;
+            }
+        }
+        alert("Operation failed, no such a zone found");
     }
 }

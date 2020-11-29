@@ -376,10 +376,19 @@
             }
         }
 
+        //initialize instances for SHH functionalities
+        var outdoorTemp = 21.0;
+        var hallway = new Room("hallway", 21.0);
+        var garage = new Room("garage", 21.0);
+        var bedroom = new Room("bedroom", 21.0);
+        var kitchen = new Room("kitchen", 21.0);
+        var bathroom = new Room("bathroom", 21.0);
+        var backyard = new Room("backyard", 21.0);
+
+        var shhRooms = [hallway, garage, bedroom, kitchen, bathroom, backyard];
+        var shh = new SHH(outdoorTemp);
+
     </script>
-
-
-
 
 </body>
 
