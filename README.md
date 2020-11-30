@@ -1,6 +1,6 @@
 # SOEN343_Delivery-3-
 
-Link to D2: https://github.com/kennguyen0303/SOEN343_Delivery-2-
+    Link to D2: https://github.com/kennguyen0303/SOEN343_Delivery-2-
 
 Note for working with the Repo:
 
