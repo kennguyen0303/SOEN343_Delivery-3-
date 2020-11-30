@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Test Suite</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.12.0.css">
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.12.0.js"></script>
+    <script src="coreFunctions.js"> </script>
+    <script src="SHP_functions.js"></script>
+    <script src="function.js"></script>
+    <script src="users.js"> </script>
+    <script src="classes.js"></script>
+    <script>
+        const add = (a, b,c) => a + b+c;
+        QUnit.module('add', function() {
+          QUnit.test('should add two numbers', function(assert) {
+            assert.equal(add(1, 1,0), 2, '1 + 1 = 2');
+          });
+        });
+        //another one
+        QUnit.module('show Door controller', function() {
+          QUnit.test('should return finish', function(assert) {
+            assert.equal(showDoorController(), 'finish', 'Should show finish');
+          });
+        });
+        //another
+        QUnit.module('add', function() {
+          QUnit.test('should add three numbers', function(assert) {
+            assert.equal(add(1, 1,1), 3, '1 + 1+1 = 3');
+          });
+        });
+      </script>
+</body>
+</html>

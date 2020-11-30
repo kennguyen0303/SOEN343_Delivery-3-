@@ -10,30 +10,6 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
     this.y = y;
     this.boundary=[]; //boundary for movement
     this.status = "closed";// for doorsm windows and lights
-    if (move_mode == "image") {//for human stick
-        this.image = new Image();
-        this.image.src = "human_stick.png";
-        this.name=color;//set the name
-        this.location="outside";//Initialize at outside
-        this.id="";//user id
-        this.image.onload=()=>{
-            ctx.drawImage(this.image, 
-                this.x, 
-                this.y,
-                this.width, this.height);
-        }
-    }
-    if (move_mode == "light") {
-        this.image = new Image();
-        this.image.src = "off_bulb.png";
-        this.name=color;//set the name
-        this.image.onload=()=>{
-            ctx.drawImage(this.image, 
-                this.x, 
-                this.y,
-                this.width, this.height);
-        }
-    }
     if(this.move_mode=="horizontal"){//make a boundary for movement
         this.boundary=[this.x,(this.x+this.width)];//inital point + width
     }
@@ -42,16 +18,7 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
     }        
     this.update = function() {
         ctx = myGameArea.canvas.getContext("2d");
-        if (move_mode == "light") {
-            //display the human stick
-            ctx.drawImage(this.image, 
-                this.x, 
-                this.y,
-                this.width, this.height);
-            //display the name or role
-            //ctx.fillText(color,this.x+15,this.y+50);//format: [0]=room name, [1]: width, [2]: height
-        }
-        else if(move_mode=="image"){
+        if(move_mode=="image"||move_mode == "light"){
                 //display the human stick
                 ctx.drawImage(this.image, 
                     this.x, 
@@ -71,21 +38,25 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
     }
 }
 
+
 //New function for D2 - for Ken
-//consider moving to a new javascript file for classes ?
+
 function room(){
-    //init the value
-    this.name;
-    this.min_width;
-    this.max_width;
-    this.min_height;
-    this.max_height;
-    this.door_index_array=[];
-    this.window_index_array=[];
-    this.light_index_array=[];
+    //List of attributes
+    this.name; //name of the room
+    this.min_width;//min width of the room
+    this.max_width;//max width of the room
+    this.min_height;//min height
+    this.max_height;//max height
+    this.door_index_array=[]; // array of index corresponding to the global array "door_array"
+    this.window_index_array=[];// array of index corresponding to the global array "window_array"
+    this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
     //methods 
-    //check if a person is inside the room
+    /**
+     * check if the person is inside the room
+     * @param {*} a_person 
+     */
     this.inside=(a_person)=>{
         if(a_person.x>=this.min_width&&a_person.x<=this.max_width&&
             a_person.y>=this.min_height&&a_person.y<=this.max_height)
@@ -96,7 +67,7 @@ function room(){
     this.getName=()=>{
         return this.name;
     }
-    //setters
+    //---------------------------Setters--------------------------
     this.setName=(name)=>{
         this.name=name;
         return 1; //for testing, it works
@@ -117,6 +88,7 @@ function room(){
         this.max_height=max_height;
         return 1;
     }
+    //---------------------------- Add items -------------------------
     this.add_window=(index)=>{
         this.window_index_array.push(index);
         return index;
@@ -154,4 +126,39 @@ function room(){
 
     
 
-} 
+}
+
+//ADDING for D3
+
+
+class humanStick extends door{
+    constructor(width, height, name, x, y){
+        super(width, height, "", x, y,"image");
+        this.image = new Image();
+        this.image.src = "../pictures/human_stick.png";
+        this.name=name;//set the name
+        this.location="outside";//Initialize at outside
+        this.id="";//user id
+        this.image.onload=()=>{
+            ctx.drawImage(this.image, 
+                this.x, 
+                this.y,
+                this.width, this.height);
+        }
+    }
+}
+
+class Light extends door{
+    constructor(width, height, name, x, y){
+        super(width, height, "", x, y,"image");
+        this.image = new Image();
+        this.image.src = "../pictures/off_bulb.png";
+        this.name=name
+        this.image.onload=()=>{
+                ctx.drawImage(this.image, 
+                this.x, 
+                this.y,
+                this.width, this.height);
+        }
+    }
+}

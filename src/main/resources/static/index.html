@@ -9,21 +9,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="coreFunctions.js"> </script>
-    <script src="SHP_functions.js"></script>
-    <script src="function.js"></script>
-    <script src="users.js"> </script>
-    <script src="classes.js"></script>
+    <script src="./javascript/coreFunctions.js"> </script>
+    <script src="./javascript/SHP_functions.js"></script>
+    <script src="./javascript/function.js"></script>
+    <script src="./javascript/users.js"> </script>
+    <script src="./javascript/classes.js"></script>
+    <script src="./javascript/eventListener.js"></script>
+    <script src="./javascript/HouseLayout.js"></script>
+    <script src="./javascript/globalVariablesAndArray.js"></script>
+    <script src="./javascript/UIfunctions.js"></script>
     <title>Smart Home Simulator</title>
     <!-- Custom styles for this template -->
-    <link href="style.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
 </head>
 
 <header>
 
 </header>
 
-<body onload="refreshTime()">
+<body>
     <div class="layout-container">
         <div class="sidebar">
             <fieldset id="simulationTab">
@@ -40,7 +44,7 @@
 
                 <!-- edit icon-->
                 <div class="row justify-content-center">
-                    <a href="#"> <img src="edit.png" alt="edit" id="editIcon" onclick="openForm()"></a>
+                    <a href="#"> <img src="./pictures/edit.png" alt="edit" id="editIcon" onclick="openForm()"></a>
                 </div>
                 <!-- /edit icon-->
 
@@ -319,62 +323,7 @@
         *Header 
         *@return a layout
         */
-        document.getElementById("defaultOpen").click(); //choose SHS on load
-        var myGameArea = {
-            canvas: document.getElementById("myCanvas"),
-            start: function () {
-                this.context = this.canvas.getContext("2d");
-                this.interval;
-                //load all element once
-                light_array.forEach(a_light => {
-                    a_light.update();
-                });
-                door_array.forEach(a_door => {
-                    a_door.newPos();
-                    a_door.update();
-                });
-                window_array.forEach(a_window => {
-                    a_window.newPos();
-                    a_window.update();
-                });
-                window.addEventListener('keydown', function (e) {
-                    isOn = document.getElementById("slider").checked;
-                    myGameArea.key = e.keyCode;
-                    if (isOn) this.interval = setInterval(updateGameArea, 20);
-                })
-                window.addEventListener('keyup', function (e) {
-                    myGameArea.key = false;
-                    clearInterval(this.interval);//let's try
-                })
-            },
-            clear: function (name) {
-                if (name == "door") {
-                    door_array.forEach(a_door => {
-                        if (a_door.move_mode == "horizontal") this.context.clearRect((a_door.x - 40), a_door.y, 60, 5);
-                        if (a_door.move_mode == "vertical") this.context.clearRect(a_door.x, (a_door.y - 30), 5, 60);
-                    });
-                }
-                else if (name == "window") {
-                    window_array.forEach(a_window => {
-                        if (a_window.move_mode == "horizontal") this.context.clearRect((a_window.x - 40), a_window.y, 60, 5);
-                        if (a_window.move_mode == "vertical") this.context.clearRect(a_window.x, (a_window.y - 30), 5, 60);
-                    });
-                }
-                else if (name == "light") {
-                    light_array.forEach(a_light => {
-                        //do something to remove the old light ? 
-                        this.context.clearRect((a_light.x), a_light.y, 20, 20);
-                    });
-                }
-                else if (name == "image") {
-                    //clear human stick
-                    user_array.forEach(user => {
-                        this.context.clearRect(user.x, user.y, 15, 20);
-                    });
-                }
-            }
-        }
-
+        //This is a comment
     </script>
 
 

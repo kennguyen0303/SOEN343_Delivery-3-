@@ -31,6 +31,7 @@ function lightAction(debugText)
  * Showing the control for the door
  */
 function showDoorController(){
+    //declare the 
     var container = document.createElement("div");
     var door_name_array=["bathroom","bedroom","backyard", "kitchen","garage_inside","entrance","garage_outside"];
     var element = document.getElementById("SHCore");
@@ -112,7 +113,7 @@ function showLightController(){
     element.appendChild(container);
     showLightAutoMode();
 }
-var autoMode=false;//boolean for auto mode
+
 /**
  * showing button to set lights on Auto mode
  */
@@ -158,12 +159,12 @@ function switchLight(val){
         else option = val;
         //myGameArea.clear("light"); //clear the old light bulbs
         if(light_array[option].status=="closed"){
-            light_array[option].image.src = "on_bulb.png";//switch on
+            light_array[option].image.src = "../pictures/on_bulb.png";//switch on
             light_array[option].status="open";
         }
         else {
             light_array[option].status="closed";
-            light_array[option].image.src = "off_bulb.png";//switch off
+            light_array[option].image.src = "../pictures/off_bulb.png";//switch off
         }
         //update the new pictures
         light_array.forEach(a_light => {
@@ -177,7 +178,7 @@ function switchLight(val){
 
 function turnOnLight(index){
     if(light_array[index].status=="closed"){
-        light_array[index].image.src = "on_bulb.png";//switch on
+        light_array[index].image.src = "../pictures/on_bulb.png";//switch on
         light_array[index].status="open";
         //update the new pictures
     light_array.forEach(a_light => {
@@ -188,7 +189,7 @@ function turnOnLight(index){
 
 function turnOffLight(index){
     if(light_array[index].status=="open"){
-        light_array[index].image.src = "off_bulb.png";//switch on
+        light_array[index].image.src = "../pictures/off_bulb.png";//switch on
         light_array[index].status="closed";
         //update the new pictures
     light_array.forEach(a_light => {
