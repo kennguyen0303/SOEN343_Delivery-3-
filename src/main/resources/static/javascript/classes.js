@@ -123,6 +123,32 @@ function room(){
         return false;
         //wait need to turn on the light and update location    
     }
+    /**
+     * This method will open/close a window for the room calling it. A parameter is used to ask
+     * for the number of windows need to be opened. 
+     * If no parameter is passed, 
+     * the function will apply the change to all window inside the room. 
+     * Created for Daniela's need
+     * @param {*} numberOfWindow 
+     */
+    this.openWindow=(numberOfWindow)=>{
+        if(!numberOfWindow){//no parameter passed, open all then
+            this.window_index_array.forEach(an_index => {
+                controlWindow(an_index);
+            });
+        }
+        try{
+            for(var i=0;i<numberOfWindow;i++){
+                var an_index=this.window_index_array[i];//pick a window from the array
+                controlWindow(an_index);//open/close that window
+            } 
+        }
+        catch(e){
+            console.log(e);//if there are error, might be index out of bound due to the input
+            console.log("Number of windows need to open: "+numberOfWindow);
+            console.log("Number of windows inside the room: "+this.window_index_array.length);
+        }
+    }
 
     
 
