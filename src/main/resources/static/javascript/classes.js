@@ -132,10 +132,12 @@ function room(){
      * @param {*} numberOfWindow 
      */
     this.openWindow=(numberOfWindow)=>{
-        if(!numberOfWindow){//no parameter passed, open all then
+        var max_number=this.window_index_array.length;
+        if(numberOfWindow==null){//no parameter passed, open all then
             this.window_index_array.forEach(an_index => {
                 controlWindow(an_index);
             });
+            return;
         }
         try{
             for(var i=0;i<numberOfWindow;i++){
