@@ -52,6 +52,7 @@ function room(){
     this.window_index_array=[];// array of index corresponding to the global array "window_array"
     this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
+    this.temperature;
     //methods 
     /**
      * check if the person is inside the room
@@ -67,10 +68,16 @@ function room(){
     this.getName=()=>{
         return this.name;
     }
+    this.getTemperature=()=>{
+        return this.temperature;
+    }
     //---------------------------Setters--------------------------
     this.setName=(name)=>{
         this.name=name;
         return 1; //for testing, it works
+    }
+    this.setTemperature=(temperature)=>{
+        this.temperature=temperature;
     }
     this.set_min_width=(min_width)=>{
         this.min_width=min_width;
