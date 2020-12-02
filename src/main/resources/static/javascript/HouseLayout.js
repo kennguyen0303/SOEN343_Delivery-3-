@@ -31,6 +31,11 @@ function renderLayout()//a function for rendering the layout of the house
                          }
                          if( myObj[key1][key2][2]=="blue") {
                              window_array.push(temp_door);//add window 
+                             room_array.forEach(a_room => {
+                                var room_name=a_room.getName();
+                                if(key2.includes(room_name))
+                                    a_room.add_window(window_array.length-1);//take the index of the window
+                            });
                          }
                          continue;
                      }
@@ -184,6 +189,7 @@ function moveUser() {
                     if(!a_room.get_occupant_list().includes(count)){//first time walk into the room
                         a_room.add_occupant(count);
                         //turn on light in the room on AUTO MODE
+                        a_room.openWindow(1);
                         if(autoMode){
                             console.log("turning on light AUTO! ");
                             a_room.light_index_array.forEach(an_index => {

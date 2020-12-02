@@ -294,7 +294,7 @@ function controlWindow(val){
     {
      var option;
         if(val==null){
-            option =document.getElementById("windowController").value -1;
+            option =document.getElementById("windowController").value -1;//select from the drop-down 
         }
         else option = val;
         if(locked_array_window[option] == "true") //checks if array value is true, if true nothing happens
