@@ -70,7 +70,6 @@ class PeriodicTempSetting {
     }
 }
 
-
 class SHH{
     constructor(outdoorTemp){
         this.outdoorTemp = outdoorTemp;
@@ -103,4 +102,14 @@ class SHH{
         }
         alert("Operation failed, no such a zone found");
     }
+}
+
+// submit zones settings
+function submitZones(){
+    $('#zoneModal').modal('hide');
+}
+
+// submit temperature settings
+function submitTemps(){
+    $('#tempModal').modal('hide');
 }

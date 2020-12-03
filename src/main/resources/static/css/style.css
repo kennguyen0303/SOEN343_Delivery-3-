@@ -1,17 +1,16 @@
-header{
+header {
   margin: 50px;
 }
-body{
+body {
   background-color: antiquewhite;
   font-size: 14px;
-
 }
-.row{
+.row {
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
-#simulationTab{
+#simulationTab {
   height: 600px;
   background-color: white;
   border: 1px solid black;
@@ -19,9 +18,9 @@ body{
   padding: 20px 20px 50px 20px;
 }
 
-#simlegend{
+#simlegend {
   border-radius: 10px;
-  background-color: #2196F3;
+  background-color: #2196f3;
   color: white;
   padding: 5px 10px 5px 5px;
 }
@@ -52,28 +51,28 @@ body{
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 27px;
   width: 27px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #2196f3;
 }
 
 input:checked + .slider:before {
@@ -96,7 +95,7 @@ input:checked + .slider:before {
 }
 
 /*Edit icon styles*/
-#editIcon{
+#editIcon {
   height: 20px;
   width: 20px;
   margin-top: 50px;
@@ -105,7 +104,7 @@ input:checked + .slider:before {
   margin-right: auto;
 }
 
-#profilePic{
+#profilePic {
   height: 110px;
   width: 100px;
   display: block;
@@ -132,7 +131,7 @@ input:checked + .slider:before {
 /* .layout-container > div {
 } */
 
-.sidebar{
+.sidebar {
   border-radius: 10px;
   grid-row-start: 1;
   grid-row-end: 4;
@@ -141,8 +140,7 @@ input:checked + .slider:before {
   box-shadow: 5px 10px 15px #888888;
 }
 
-
-.console{
+.console {
   border-radius: 10px;
   background-color: white;
   grid-column-start: 2;
@@ -150,7 +148,7 @@ input:checked + .slider:before {
   box-shadow: 5px 10px 15px #888888;
 }
 
-.house-diagram{
+.house-diagram {
   border-radius: 10px;
   background-color: white;
   grid-row-start: 1;
@@ -160,7 +158,7 @@ input:checked + .slider:before {
   box-shadow: 5px 10px 15px #888888;
 }
 
-.tab-items{
+.tab-items {
   border-radius: 10px;
   background-color: white;
   grid-row-start: 1;
@@ -174,8 +172,8 @@ input:checked + .slider:before {
 
 /* Style for Tabbed items */
 
-.tabLink{
-  background-color: #2196F3; 
+.tabLink {
+  background-color: #2196f3;
   color: white;
   font-weight: bold;
   min-width: 65px;
@@ -184,16 +182,15 @@ input:checked + .slider:before {
   border-radius: 5px 5px 5px 5px;
 }
 
-
 .tabContainer {
-  height: 500px; 
+  height: 500px;
   margin-left: 25%;
   border-style: solid;
   border-width: 2px;
   border-radius: 10px;
   padding-left: 15px;
   padding-right: 15px;
-  border-color: #2196F3;
+  border-color: #2196f3;
 }
 
 /* end of styling for tabbed items*/
@@ -228,11 +225,11 @@ input:checked + .slider:before {
   max-width: 300px;
   padding: 10px;
   background-color: white;
- 
 }
 
 /* Full-width input fields */
-.form-container input[type=text], .form-container input[type=password] {
+.form-container input[type='text'],
+.form-container input[type='password'] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -241,20 +238,21 @@ input:checked + .slider:before {
 }
 
 /* When the inputs get focus, do something */
-.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+.form-container input[type='text']:focus,
+.form-container input[type='password']:focus {
   background-color: #ddd;
   outline: none;
 }
 
 /* Set a style for the submit/login button */
 .form-container .btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 16px 20px;
   border: none;
   cursor: pointer;
   width: 100%;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   opacity: 0.8;
 }
 
@@ -264,6 +262,7 @@ input:checked + .slider:before {
 }
 
 /* Add some hover effects to buttons */
-.form-container .btn:hover, .open-button:hover {
+.form-container .btn:hover,
+.open-button:hover {
   opacity: 1;
 }
