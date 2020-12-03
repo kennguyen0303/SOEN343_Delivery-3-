@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserNotFoundExceptionTest {
-    
+
     @Test
     public void loginUser(){
         UserDataAccessService userDAO = new UserDataAccessService();
@@ -24,5 +24,16 @@ class UserNotFoundExceptionTest {
 
         UUID newId = UUID.randomUUID();
         assertThrows(UserNotFoundException.class, () -> {userDAO.loginUser(newId);});
+    }
+
+    @Test
+    public void deleteUser(){
+        UserDataAccessService userDAO = new UserDataAccessService();
+        UUID id = UUID.randomUUID();
+        User user = new User(id, "parent", new GrantPermissions());
+        userDAO.insertUser(user);
+
+        UUID newId = UUID.randomUUID();
+        assertThrows(UserNotFoundException.class, () -> {userDAO.deleteUserById(newId);});
     }
 }
