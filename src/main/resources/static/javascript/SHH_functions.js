@@ -38,6 +38,10 @@ class Zone{
     setDefaultTemperature(){
         // TODO the default temperature will be 24.0
     }
+
+    getRooms(){
+        return this.rooms;
+    }
 }
 
 class PeriodicTempSetting {
