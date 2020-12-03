@@ -75,7 +75,9 @@
 
                 <!--Temperature -->
                 <div class="row justify-content-center" style="font-weight:700;">
-                    Outside Temp. 15 &#730;C
+                    <label>Outside: </label><br />
+                    <label id='outsideTemp' onclick="submitOutsideTemp()">15.5</label>
+                    <label>&#8451</label>
                 </div>
                 <!--/Temperature -->
                 <div class="row justify-content-center" id="time" style="font-weight:700;">
@@ -286,7 +288,7 @@
                             <div class="modal-body">
                                 <div class="modal-body" style="margin: 20px">
                                     <div class="form-group row">
-                                        <label for="">Hallway</label>
+                                        <label for="" class="roomLabel">hallway</label>
                                         <select name="" id="hallwaySelect" class="form-control">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -294,7 +296,7 @@
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </select>
-                                        <label for="">Garage</label>
+                                        <label for="" class="roomLabel">garage</label>
                                         <select name="" id="garageSelect" class="form-control">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -302,7 +304,7 @@
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </select>
-                                        <label for="">Kitchen</label>
+                                        <label for="" class="roomLabel">kitchen</label>
                                         <select name="" id="kitchenSelect" class="form-control">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -310,7 +312,7 @@
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </select>
-                                        <label for="">Bedroom</label>
+                                        <label for="" class="roomLabel">bedroom</label>
                                         <select name="" id="bedroomSelect" class="form-control">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -318,7 +320,7 @@
                                             <option value="4">4</option>
                                             <option value="5">5</option>
                                         </select>
-                                        <label for="">Bathroom</label>
+                                        <label for="" class="roomLabel">bathroom</label>
                                         <select name="" id="bathroomSelect" class="form-control">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -360,6 +362,8 @@
                                     <div class="form-group row">
                                         <!-- a form for temperature setting -->
                                         <table class="table table-bordered">
+                                            <caption>The unset zone(s) will be set 24 Celsius for the whole day by
+                                                default</caption>
                                             <thead>
                                                 <tr class="text-center">
                                                     <th rowspan="2">Zone ID</th>
