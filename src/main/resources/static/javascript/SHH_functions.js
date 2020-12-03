@@ -129,6 +129,7 @@ class SHH{
     }
 }
 
+var shh = new SHH('15.5');
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){
@@ -164,29 +165,37 @@ function submitZones(){
         roomZones[roomName] = roomID;
     }
 
-    //extract all set rooms
-    var allZones = shh.getAllZones();
-    var rooms = new Array();
-    allZones.forEach(zone => {
-        var roomZones = zone.getAllRooms();
-        roomZones.forEach(room => {
-            rooms.push(room);
-        });
+    //delete all rooms
+    for (let i = 0; i < shh.zones.length; i++) {
+        shh.zones[i].resetRooms()
+    }
+
+    //add selected rooms for each zone
+    room_array.forEach(room => {
+        if (room.getName() == 'hallway') {
+            shh.zones[roomZones['hallway']].addRoom(room);
+        }
+        if (room.getName() == 'garage') {
+            shh.zones[roomZones['garage']].addRoom(room);
+        }
+        if (room.getName() == 'kitchen') {
+            shh.zones[roomZones['kitchen']].addRoom(room);
+        }
+        if (room.getName() == 'bedroom') {
+            shh.zones[roomZones['bedroom']].addRoom(room);
+        }
+        if (room.getName() == 'bathroom') {
+            shh.zones[roomZones['bathroom']].addRoom(room);
+        }
     });
-
-    //reset all rooms of 
-
-    //check all the rooms
-    rooms.forEach(room => {
-        // check every 
-    });
-
-    // pair zones and rooms according to the input
 
     // TODO start monitor temperature under new settings
 
     // close zone modal
-    return shh;
+    for (let i = 0; i < shh.zones.length; i++) {
+        console.log(shh.zones[i].rooms);
+        
+    }
     $('#zoneModal').modal('hide');
 }
 
