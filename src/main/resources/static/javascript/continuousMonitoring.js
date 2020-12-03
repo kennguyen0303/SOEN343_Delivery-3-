@@ -42,8 +42,6 @@ class  HAVCController{
             openWindowsInSummer();
         }
 
-        updateRoomTemperature();
-
         setTimeout(monitorTemperature(), temperatureTimeout);
      }
 
