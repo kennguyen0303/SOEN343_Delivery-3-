@@ -7,3 +7,6 @@ var room_array=[];//array for the rooms
 var option;
 var user_array=[];//an array for controlling the user in the house
 var autoMode=false;//boolean for auto mode
+
+// For Continuous Monitoring
+var temperatureTimeout = 1000;

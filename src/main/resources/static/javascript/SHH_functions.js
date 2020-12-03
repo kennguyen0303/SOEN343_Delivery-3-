@@ -29,7 +29,7 @@ class Zone{
         alert("All settings have been saved.");
     }
 
-    // TODO check if all periodic temperature setttings can cover the whole day
+    // TODO check if all periodic temperature settings can cover the whole day
     isFullyCovered(){
 
     }
@@ -91,16 +91,31 @@ class SHH{
 
     addZone(newZone){
         this.zones.push(newZone);
+
+        // temperature monitoring
+        heater = new HAVCController(newZone);
+        heater.start();
+        this.heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
         for (let i = 0; i < this.zones.length; i++) {
             const zone = this.zones[i];
             if (zone.zoneID == id) {
-                this.splice(i, 1);
+                this.zones.splice(i, 1);
+
+                // remove associated heater component
+                if(this.heaterComponents[i].id == id){
+                    this.heaterComponents.splice(i, 1);
+                }
                 return;
             }
         }
+
         alert("Operation failed, no such a zone found");
+    }
+
+    getHeatingComponents(){
+        return heatingComponents;
     }
 }
