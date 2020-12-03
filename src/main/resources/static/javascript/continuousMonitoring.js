@@ -40,9 +40,6 @@ function getDesiredTemperatureByZone(location){
     return 30;
 }
 
-function setOutsideTemperature(){
-}
-
 function changeTemp(idealTemperature, temperatureInZone, location){
 
     setTimeout(monitorTemperature(location), 1000);
@@ -52,7 +49,12 @@ function changeTemp(idealTemperature, temperatureInZone, location){
 function openWindowsInSummer(location){
     var currentSeason = getCurrentSeason();
     if(currentSeason == Seasons.season.SUMMER){
-
-            // open all windows in zone
+        // add for loop for rooms in zone
+        var roomName;
+            for(int i= 0; i < room_array.length; i++){
+               if(roomName ==  roomArray[i].getName()){
+                  room_array[i].open
+               }
+            }
     }
 }
