@@ -29,6 +29,7 @@ class  HAVCController{
 
         if(temperatureInZone > outsideTemperature){
             openWindowsInSummer();
+        }
      }
 
      function getDesiredTemperatureByZone(zoneID){
