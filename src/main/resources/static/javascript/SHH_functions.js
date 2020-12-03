@@ -94,7 +94,7 @@ class SHH{
 
         // temperature monitoring
         heater = new HAVCController(newZone);
-        heater.start();
+        heater.startMonitoring();
         this.heatingComponents.push(heater);
     }
 

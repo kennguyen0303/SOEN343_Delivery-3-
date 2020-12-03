@@ -14,7 +14,7 @@ class  HAVCController{
         this.state = HAVCStates.states.STOPPED;
     }
 
-    function start(){
+    function startMonitoring(){
         monitorTemperature();
     }
 
