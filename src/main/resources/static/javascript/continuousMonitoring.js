@@ -20,8 +20,10 @@ class  HAVCController{
 
     function monitorTemperature(){
         var outsideTemperature = 18; /*getOutsideTemperature();*/
-        var temperatureInZone = getTemperatureInZone(zoneID);
-        var idealTemperature = getDesiredTemperatureByZone(zoneID);
+
+        // TODO: figure how to get these temperatures
+        var temperatureInZone;
+        var idealTemperature;
         var increase = (idealTemperature > temperatureInZone);
 
         if(Math.abs(idealTemperature - temperatureInZone) > 1){
@@ -43,10 +45,6 @@ class  HAVCController{
         }
 
         setTimeout(monitorTemperature(), temperatureTimeout);
-     }
-
-     function getDesiredTemperatureByZone(zoneID){
-         return 30;
      }
 
      function openWindowsInSummer(){
