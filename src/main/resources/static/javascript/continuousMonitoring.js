@@ -23,27 +23,43 @@ class  HAVCController{
         var outsideTemperature = SHH.outdoorTemp; //TODO: Get outside temperature
 
         // TODO: Get ideal temperature in a zone
-        var idealTemperature;
+        var idealTemperature = this.zone.getIdealTemperature();
 
         var rooms = this.zone.getRooms();
         for(let i = 0; i< rooms.length; i++){
-            var temperatureInRoom = rooms[i].getTemperature();
-            var increase;
-            setHAVCState(idealTemperature, temperatureInRoom);
 
-            if(this.state == HAVCStates.states.RUNNING){
-                increase = (idealTemperature > temperatureInRoom);
-                updateRoomTemperature(increase, 0.1, room);
+            if(this.state == HAVCStates.states.STOPPED){
+                 var index = rooms[i].window_index_array();
+                 if(false /*no windows open*/){ // TODO: find state of windows
+                    this.state = HAVCStates.states.RUNNING;
+                 }
             }
-            else if(this.state == HAVCStates.states.PAUSED){
-                increase = (outsideTemperature > temperatureInRoom);
-                updateRoomTemperature(increase, 0.05, room);
+
+            if(this.state == HAVCStates.states.RUNNING || this.state == HAVCStates.states.PAUSED){
+                var temperatureInRoom = rooms[i].getTemperature();
+                var increase;
+                setHAVCState(idealTemperature, temperatureInRoom);
+
+                if(this.state == HAVCStates.states.RUNNING){
+                                increase = (idealTemperature > temperatureInRoom);
+                                updateRoomTemperature(increase, 0.1, room);
+                }
+                else if(this.state == HAVCStates.states.PAUSED){
+                                increase = (outsideTemperature > temperatureInRoom);
+                                updateRoomTemperature(increase, 0.05, room);
+                }
             }
 
             if(temperatureInRoom == 0){
-                // TODO: send to application console and log file
-                alert("Get your house temperature under control plz thx");
-            }
+                 var consoleNode = document.createElement("p");
+                 var text = "Caution! Temperature below zero. Pipes may burst."
+                 var textNode =  document.createTextNode(text);
+                 consoleNode.appendChild(textNode);
+                 document.getElementById("outputConsole").appendChild(consoleNode);
+
+                 // write to output log
+                 writeToFile(text);
+             }
 
             if(temperatureInRoom > outsideTemperature){
                 openWindowsInSummer(room);
@@ -69,10 +85,10 @@ class  HAVCController{
     this.openWindowsInSummer = function(room){
          var currentSeason = getCurrentSeason();
          if(currentSeason == Seasons.season.SUMMER){
-             this.state = HAVCStates.states.STOPPED;
-
-             // do I need to check for away modes?
-             room.openWindow(); // no parameters opens all windows in room
+             if(!awayMode){
+                this.state = HAVCStates.states.STOPPED;
+                room.openWindow(); // no parameters opens all windows in room
+             }
          }
      }
 
