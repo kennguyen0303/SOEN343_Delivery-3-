@@ -10,7 +10,8 @@ public class Child extends User{
     public Child(UUID id, String roleType) {
         super(id, roleType, new DenyPermissions());
 
-        UserPermissions userPermissions = new UserPermissions(false, false, false, true, true, false);
+        UserPermissions userPermissions = new UserPermissions();
+        userPermissions.setAsChild();
         setUserPermissions(userPermissions);
     }
 }

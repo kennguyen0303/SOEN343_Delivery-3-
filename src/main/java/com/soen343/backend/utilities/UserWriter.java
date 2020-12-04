@@ -30,6 +30,12 @@ public class UserWriter {
                 bw.newLine();
                 bw.write(Boolean.toString(user.getUserPermissions().getCanSetAwayMode()));
                 bw.newLine();
+                bw.write(Boolean.toString(user.getUserPermissions().getCanDefineZones()));
+                bw.newLine();
+                bw.write(Boolean.toString(user.getUserPermissions().getCanOverrideAllTemperatures()));
+                bw.newLine();
+                bw.write(Boolean.toString(user.getUserPermissions().getCanOverrideRestrictedTemperature()));
+                bw.newLine();
                 bw.newLine();
             }
 

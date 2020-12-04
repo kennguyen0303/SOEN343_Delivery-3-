@@ -11,7 +11,8 @@ public class Guest extends User {
     {
         super(id, roleType, new DenyPermissions());
 
-        UserPermissions userPermissions = new UserPermissions(false, false, false, true, true, false);
+        UserPermissions userPermissions = new UserPermissions();
+        userPermissions.setAsGuest();
         setUserPermissions(userPermissions);
     }
 }

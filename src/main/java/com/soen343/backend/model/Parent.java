@@ -11,7 +11,8 @@ public class Parent extends User {
     {
         super(id, roleType, new GrantPermissions());
 
-        UserPermissions userPermissions = new UserPermissions(true, true, true, true, true, true);
+        UserPermissions userPermissions = new UserPermissions();
+        userPermissions.setAsParent();
         setUserPermissions(userPermissions);
     }
 }
