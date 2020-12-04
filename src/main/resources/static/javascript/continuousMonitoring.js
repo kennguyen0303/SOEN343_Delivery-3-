@@ -21,50 +21,59 @@ class  HAVCController{
     function monitorTemperature(){
         var outsideTemperature = 18; /*getOutsideTemperature();*/
 
-        // TODO: figure how to get these temperatures
-        var temperatureInZone;
         var idealTemperature;
-        var increase = (idealTemperature > temperatureInZone);
 
-        if(Math.abs(idealTemperature - temperatureInZone) > 1){
-           this.state = HAVCStates.states.RUNNING;
+        var rooms = this.zone.getRooms();
+        for(let i = 0; i< rooms.length; i++){
+            var temperatureInRoom = rooms[i].temperature;
+            var increase = (idealTemperature > temperatureInRoom);
+            setHAVCState(idealTemperature, temperatureInRoom);
 
-           updateRoomTemperature(increase, 0.1);
-        }
-        else if(Math.abs(idealTemperature - temperatureInZone) >= 0.25){
-            this.state = HAVCStates.states.RUNNING;
-            updateRoomTemperature(increase, 0.1);
-        }
-        else if(idealTemperature == temperatureInZone){
-            this.state = HAVCStates.states.STOPPED;
-            updateRoomTemperature(increase, 0.05);
+            if(this.state == HAVCStates.states.RUNNING){
+                updateRoomTemperature(increase, 0.1, room);
+            }
+            else if(this.state == HAVCStates.states.PAUSED){
+                updateRoomTemperature(increase, 0.05, room);
+            }
+
+            if(temperatureInRoom == 0){
+                // alert console
+            }
+
+            if(temperatureInRoom > outsideTemperature){
+                openWindowsInSummer(room);
+            }
         }
 
-        if(temperatureInZone > outsideTemperature){
-            openWindowsInSummer();
-        }
-
+        // TODO: figure how to get these temperatures
         setTimeout(monitorTemperature(), temperatureTimeout);
-     }
+    }
 
-     function openWindowsInSummer(){
+    function setHAVCState(idealTemperature, temperatureInRoom)
+    {
+        if(Math.abs(idealTemperature - temperatureInRoom) > 1){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(Math.abs(idealTemperature - temperatureInRoom) >= 0.25){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(idealTemperature == temperatureInRoom){
+            this.state = HAVCStates.states.PAUSED;
+        }
+    }
+
+     function openWindowsInSummer(room){
          var currentSeason = getCurrentSeason();
          if(currentSeason == Seasons.season.SUMMER){
-             for(let i = 0; i < rooms.length; i++){
-                     rooms[i].openWindow();
-                 }
+             this.state = HAVCStates.states.STOPPED;
+             room.openWindow(); // do I need to check for away mode???
          }
      }
 
-     function updateRoomTemperature(increase, rate){
-        var rooms = this.zone.getRooms();
-
-        for(let i = 0; i < rooms.length; i++){
-            var room =  rooms[i];
+     function updateRoomTemperature(increase, rate, room){
             var currentTemp =  room.getTemperature();
             var roomTemp = increase ? currentTemp + rate: currentTemp - rate;
             room.temperature = roomTemp;
-        }
      }
 }
 
