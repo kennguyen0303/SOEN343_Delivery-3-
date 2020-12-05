@@ -15,11 +15,26 @@ class Zone{
         return this.rooms;
     }
 
+//CONFLICT START
+    // TODO check if all periodic temperature settings can cover the whole day
+    isFullyCovered(){
+
+    }
+
+    // TODO set default temperature for uncovered periods
+    setDefaultTemperature(){
+        // TODO the default temperature will be 24.0
+//CONFLICT MIDDLE POINT
     resetRooms(){
         // delete all rooms
         while (this.rooms.length > 0) {
             this.rooms.splice(0, 1)
         }
+//CONFLICT11 END
+    }
+
+    getRooms(){
+        return this.rooms;
     }
 }
 
@@ -98,20 +113,37 @@ class SHH{
 
     addZone(newZone){
         this.zones.push(newZone);
+
+        // temperature monitoring
+        heater = new HAVCController(newZone);
+        heater.startMonitoring();
+        this.heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
         for (let i = 0; i < this.zones.length; i++) {
             const zone = this.zones[i];
             if (zone.zoneID == id) {
-                this.splice(i, 1);
+                this.zones.splice(i, 1);
+
+                // remove associated heater component
+                if(this.heaterComponents[i].id == id){
+                    this.heaterComponents.splice(i, 1);
+                }
                 return;
             }
         }
+
         alert("Operation failed, no such a zone found");
     }
-}
 
+
+    getHeatingComponents(){
+        return heatingComponents;
+    }
+
+}
+//------ALEX---------CONFLICT-START
 var shh = new SHH('15.5');
 
 // set the outside temperature according to user's input
@@ -410,4 +442,5 @@ function updateTemp(){
             room.setTemperature(newTemp);
         }
     });
+//CONFLICT 2 END
 }
