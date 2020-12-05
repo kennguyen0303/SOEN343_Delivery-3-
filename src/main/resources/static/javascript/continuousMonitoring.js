@@ -95,7 +95,7 @@ class  HAVCController{
     this.openWindowsInSummer = function(room){
          var currentSeason = getCurrentSeason();
          if(currentSeason == Seasons.season.SUMMER){
-             if(!awayMode){
+             if(document.getElementById('awayModeButton').innerHTML == 'OFF'){
                 this.state = HAVCStates.states.STOPPED;
                 room.openWindow(); // no parameters opens all windows in room
              }
