@@ -86,24 +86,18 @@ function room(){
             // obtain the zone
             for (let i = 0; i < shh.zones.length; i++) {
                 const zone = shh.zones[i];
-                if (zone.rooms.length > 0) {
+                if (zone.rooms.length > 0 && zone.getPeriodicTempSettings().length > 0) {
                     for (let j = 0; j < zone.rooms.length; j++) {
                         const room = zone.rooms[j];
-                        if (room.getName() == this.getName) {
-                            if (room.getPeriodicTempSettings() > 0) {
-                                // the temp has been defined by the user
-                                return room.getPeriodicTempSettings()
-                            }
-                            else{
-                                // the temp has not been defined, set the default value
-                                return '24';
-                            }
+                        if (room.getName() == this.getName()) {
+                            // console.log(zone.getPeriodicTempSettings());
+                            return zone.getPeriodicTempSettings();
                         }
                     }
                 }
             }
             //no corresponding zone is found
-            return '24';
+            return ' outer 24';
         }
     }
     //---------------------------Setters--------------------------
