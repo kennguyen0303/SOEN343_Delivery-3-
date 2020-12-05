@@ -360,7 +360,6 @@ function refreshTable(){
     }
 }
 
-var overriddenRooms = [];
 function loadRoomsDropdown()
 {
     var htmlText = "<select name='roomName' id='roomName'>";
@@ -372,7 +371,6 @@ function loadRoomsDropdown()
             {
                 for (var key2 of Object.keys(myObj[key1])){
                     if(key2=="name"){
-                        overriddenRooms.push(false);
                         var roomName = myObj[key1][key2][0].toString()
                         htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
                     }
@@ -393,11 +391,11 @@ function postTemp(){
     room_array.forEach(room => {
 
         if (room.getName() == roomCheck) {
-            console.log(room.getTemperature());
+            //console.log(room.getDesiredTemperature());
             var consoleNode = document.createElement("p");
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getTemperature();
-            console.log(overriddenRooms[i]);
-            if (overriddenRooms[i])
+            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
+            //console.log(room.isOverriden);
+            if (room.isOverriden)
             {
                 alertText += " OVERRIDDEN";
             }           
@@ -426,9 +424,17 @@ function updateTemp(){
     var i = 0;
     room_array.forEach(room => {
         if (room.getName() == roomCheck) {
-            overriddenRooms[i] = true;
-            room.setTemperature(newTemp);
+            room.setDesiredTemperature(newTemp);
         }
     });
 //CONFLICT 2 END
+}
+
+function resetTemp(){
+    var roomCheck = document.getElementById('roomName').value;
+    room_array.forEach(room => {
+        if (room.getName() == roomCheck) {
+            room.resetOverriden();
+        }
+    });
 }
