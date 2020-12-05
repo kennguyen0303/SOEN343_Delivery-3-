@@ -21,24 +21,6 @@ class Zone{
             this.rooms.splice(0, 1)
         }
     }
-
-    // add a period to the zone
-    addPeriodicTemperatureSetting(startTime, endTime, tempSetting){
-        newPeriodicTempSetting = new PeriodicTempSetting(startTime, endTime, tempSetting);
-        
-        // check conflict
-        this.forEach(element => {
-            if (element.isOverlapped(newPeriodicTempSetting)) {
-                alert("the setting for period conflicts, please choose other period");
-                return;
-            }
-        });
-
-        //push the new element
-        this.periodicTempSettings.push(newPeriodicTempSetting)
-
-        alert("All settings have been saved.");
-    }
 }
 
 class PeriodicTempSetting {
