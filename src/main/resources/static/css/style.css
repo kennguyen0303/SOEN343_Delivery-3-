@@ -274,3 +274,23 @@ input:checked + .slider:before {
   overflow-x: auto;
   width: auto;
 }
+
+.droppable.summer 
+{overflow: auto;
+   width: 200px;
+   height:150px; 
+   border: 1px solid black;
+   background-color:aqua;
+   margin-right: 400px
+   }
+   .droppable.winter
+   {overflow: auto;
+      width: 200px;
+      height:150px; 
+      border: 1px solid black;
+      background-color:lavender;
+      }
+.draggable { 
+width: 80px; 
+height: 50px; 
+padding: 0.5em; };

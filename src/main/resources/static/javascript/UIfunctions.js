@@ -61,3 +61,65 @@ function tikTok() {
         
     }
 }
+//Feature: Set/Reset months for Winter / Summer ------------
+$( function() {
+    $( ".draggable" ).draggable({helper:'clone'});
+    $(".summer").droppable(
+        {
+            accept: ".draggable",
+            drop: function(ev,ui){
+              addMonth("summer",ui);
+            }
+        }
+    );
+    $(".winter").droppable(
+        {
+            accept: ".draggable",
+            drop: function(ev,ui){
+                addMonth("winter",ui);
+            }
+        }
+    );
+    $("#reset").click(function(){  
+      $(".list").empty();
+      while (winter_month.length!=0) {
+          winter_month.pop();
+      };
+      while (summer_month.length!=0) {
+        summer_month.pop();
+    };
+        alert("The months were reseted");
+    })
+  } );
+
+function addMonth(season,ui){
+        var array=[];
+        var other_season;
+        var other_array;
+        var droppedItem = $(ui.draggable).clone();//make a clone of the hold item
+        var id=droppedItem.text();//get the text
+        //Check the season and set proper variables
+        if(season=="summer") {
+            array=summer_month;
+            other_season="winter";
+            other_array=winter_month;
+        }
+        else if(season=="winter") {
+            array=winter_month;
+            other_season="summer";
+            other_array=summer_month;
+        }
+        //if the month is used by the other season
+        if(other_array.indexOf(id)!=(-1)){
+            alert("This month is being used for "+other_season);
+        }
+        else if(array.indexOf(id)==(-1)){//add if it is new
+          array.push(id);
+          droppedItem.attr('id', id);
+          var temp_selector="."+season+" ul";
+          $(temp_selector).append(droppedItem);
+        }
+        else{//it was used for this season
+            alert(season+" time already had this month");
+        }
+}
