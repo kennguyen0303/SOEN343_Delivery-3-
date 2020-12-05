@@ -383,6 +383,9 @@ function loadRoomsDropdown()
     } 
     xmlhttp.open("GET", "layout.json", true);
     xmlhttp.send();
+
+    document.getElementById("winterDefault").innerHTML = "Desired winter temperature: " + desiredWinterTemp;
+    document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
 }
 
 function postTemp(){
@@ -437,4 +440,19 @@ function resetTemp(){
             room.resetOverriden();
         }
     });
+}
+
+function changeDesired(season)
+{
+    var desired = prompt("What do you want to change the desired temperature to?", "0");
+
+    if(season)
+    {
+        desiredWinterTemp = desired;
+        document.getElementById("winterDefault").innerHTML = "Desired winter temperature: " + desiredWinterTemp;
+    }
+    else{
+        desiredSummerTemp = desired;
+        document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
+    }
 }
