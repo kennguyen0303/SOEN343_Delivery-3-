@@ -5,10 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="./javascript/coreFunctions.js"> </script>
     <script src="./javascript/SHP_functions.js"></script>
     <script src="./javascript/function.js"></script>
@@ -18,16 +20,35 @@
     <script src="./javascript/HouseLayout.js"></script>
     <script src="./javascript/globalVariablesAndArray.js"></script>
     <script src="./javascript/UIfunctions.js"></script>
+    <script src="./javascript/SHH_functions.js"></script>
+    <script>
+        $( function() {
+          $( ".draggable" ).draggable();
+
+          $(".droppable").droppable(
+              {
+                  accept: ".draggable",
+                  drop: function(ev,ui){
+                    alert("Dropped");
+                  }
+              }
+          );
+        } );
+    </script>
+      <style>
+        .draggable { width: 80px; height: 50px; padding: 0.5em; }
+        </style>
     <title>Smart Home Simulator</title>
     <!-- Custom styles for this template -->
     <link href="./css/style.css" rel="stylesheet">
+    <!-- styles for bootstrap -->
 </head>
 
 <header>
 
 </header>
 
-<body>
+<body onload="loadRoomsDropdown()">
     <div class="layout-container">
         <div class="sidebar">
             <fieldset id="simulationTab">
@@ -72,7 +93,9 @@
 
                 <!--Temperature -->
                 <div class="row justify-content-center" style="font-weight:700;">
-                    Outside Temp. 15 &#730;C
+                    <label>Outside: </label><br />
+                    <label id='outsideTemp' onclick="submitOutsideTemp()">15.5</label>
+                    <label>&#8451</label>
                 </div>
                 <!--/Temperature -->
                 <div class="row justify-content-center" id="time" style="font-weight:700;">
@@ -84,10 +107,11 @@
         </div>
         <div class="tab-items">
             <div class="tabs">
-                <button class="tabLink" onclick="changeTabs(event, 'SHSystem')" id="defaultOpen">SHS</button>
+                <button class="tabLink" onclick="changeTabs(event, 'SHSystem')">SHS</button>
                 <button class="tabLink" onclick="changeTabs(event, 'SHCore')">SHC</button>
                 <button class="tabLink" onclick="changeTabs(event, 'SHProtection')">SHP</button>
-                <button class="tabLink" onclick="changeTabs(event, 'SHHeating')">SHH</button>
+                <button class="tabLink" onclick="changeTabs(event, 'SHHeating')" id="defaultOpen">SHH</button>
+                <!-- TO BE CHANGED BACK TO SHS-->
             </div>
 
             <div id="SHSystem" class="tabcontent">
@@ -170,7 +194,103 @@
                     <div id="RestrictedLights"></div>
                     <div id="SetAwayMode"></div>
                 </div>
-
+                <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Set Months for Summer/Winter
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Set months</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">Heading</div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>January</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>February</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>March</p>
+                                          </div>
+                                    </div>
+                                    <div class="droppable col-6">
+                                        Summer
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>April</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>May</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>June</p>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>July</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>August</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>September</p>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>October</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>November</p>
+                                          </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="draggable ui-widget-content">
+                                            <p>December</p>
+                                          </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"   >Save changes</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
             </div>
 
             <div id="SHCore" class="tabcontent">
@@ -262,10 +382,213 @@
             </div>
 
             <div id="SHHeating" class="tabcontent">
-                Smart Home Heating Components
+                <br>
+                <!-- Button trigger modal for zone setting -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#zoneModal">
+                    Set Zones
+                </button>
+
+                <!-- zone modal starts here -->
+                <div class="modal fade" id="zoneModal" tabindex="-1" role="dialog" aria-labelledby="zoneModalLabel"
+                    aria-hidden="true" data-backdrop="false">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="zoneModalLabel">Select a zone for each room</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-body" style="margin: 20px">
+                                    <div class="form-group row">
+                                        <label for="" class="roomLabel">hallway</label>
+                                        <select name="" id="hallwaySelect" class="form-control">
+                                            <option value="0" selected>NONE</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <label for="" class="roomLabel">garage</label>
+                                        <select name="" id="garageSelect" class="form-control">
+                                            <option value="0" selected>NONE</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <label for="" class="roomLabel">kitchen</label>
+                                        <select name="" id="kitchenSelect" class="form-control">
+                                            <option value="0" selected>NONE</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <label for="" class="roomLabel">bedroom</label>
+                                        <select name="" id="bedroomSelect" class="form-control">
+                                            <option value="0" selected>NONE</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <label for="" class="roomLabel">bathroom</label>
+                                        <select name="" id="bathroomSelect" class="form-control">
+                                            <option value="0" selected>NONE</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="submitZones()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- zone modal ends here -->
+                <br><br>
+
+                <!-- Button trigger modal for temperature setting -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tempModal"
+                    onclick="showPeriodicTemps()">
+                    Set Periods and Temperatures
+                </button>
+
+                <!-- periodic temperature modal starts here -->
+                <div class="modal fade" id="tempModal" tabindex="-1" role="dialog" aria-labelledby="tempModalLabel"
+                    aria-hidden="true" data-backdrop="false">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="tempModalLabel">Periodic Temperatures Setting</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-body" style="margin: 20px">
+                                    <div class="form-group row">
+                                        <!-- a form for temperature setting -->
+                                        <table class="table table-bordered">
+                                            <caption>The unset zone(s) will be set 24 Celsius for the whole day by
+                                                default</caption>
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th rowspan="2">Zone ID</th>
+                                                    <th colspan="3">Peroid 1</th>
+                                                    <th colspan="3">Period 2</th>
+                                                    <th colspan="3">Period 3</th>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>Temp</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>Temp</th>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>Temp</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="group-list">
+                                                <!-- TODO create the contents according to the zone created -->
+                                                <tr class="text-center">
+                                                    <td id="zoneid1">1</td>
+                                                    <td><input type="time" id="z1p1s"></td>
+                                                    <td><input type="time" id="z1p1e"></td>
+                                                    <td><input type="number" id="z1p1t"></td>
+                                                    <td><input type="time" id="z1p2s"></td>
+                                                    <td><input type="time" id="z1p2e"></td>
+                                                    <td><input type="number" id="z1p2t"></td>
+                                                    <td><input type="time" id="z1p3s"></td>
+                                                    <td><input type="time" id="z1p3e"></td>
+                                                    <td><input type="number" id="z1p3t" size="4"></td>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <td id="zoneid2">2</td>
+                                                    <td><input type="time" id="z2p1s"></td>
+                                                    <td><input type="time" id="z2p1e"></td>
+                                                    <td><input type="number" id="z2p1t"></td>
+                                                    <td><input type="time" id="z2p2s"></td>
+                                                    <td><input type="time" id="z2p2e"></td>
+                                                    <td><input type="number" id="z2p2t"></td>
+                                                    <td><input type="time" id="z2p3s"></td>
+                                                    <td><input type="time" id="z2p3e"></td>
+                                                    <td><input type="number" id="z2p3t"></td>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <td id="zoneid3">3</td>
+                                                    <td><input type="time" id="z3p1s"></td>
+                                                    <td><input type="time" id="z3p1e"></td>
+                                                    <td><input type="number" id="z3p1t"></td>
+                                                    <td><input type="time" id="z3p2s"></td>
+                                                    <td><input type="time" id="z3p2e"></td>
+                                                    <td><input type="number" id="z3p2t"></td>
+                                                    <td><input type="time" id="z3p3s"></td>
+                                                    <td><input type="time" id="z3p3e"></td>
+                                                    <td><input type="number" id="z3p3t"></td>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <td id="zoneid4">4</td>
+                                                    <td><input type="time" id="z4p1s"></td>
+                                                    <td><input type="time" id="z4p1e"></td>
+                                                    <td><input type="number" id="z4p1t"></td>
+                                                    <td><input type="time" id="z4p2s"></td>
+                                                    <td><input type="time" id="z4p2e"></td>
+                                                    <td><input type="number" id="z4p2t"></td>
+                                                    <td><input type="time" id="z4p3s"></td>
+                                                    <td><input type="time" id="z4p3e"></td>
+                                                    <td><input type="number" id="z4p3t"></td>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <td id="zoneid5">5</td>
+                                                    <td><input type="time" id="z5p1s"></td>
+                                                    <td><input type="time" id="z5p1e"></td>
+                                                    <td><input type="number" id="z5p1t"></td>
+                                                    <td><input type="time" id="z5p2s"></td>
+                                                    <td><input type="time" id="z5p2e"></td>
+                                                    <td><input type="number" id="z5p2t"></td>
+                                                    <td><input type="time" id="z5p3s"></td>
+                                                    <td><input type="time" id="z5p3e"></td>
+                                                    <td><input type="number" id="z5p3t"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="submitTemps()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- periodic temperature modal ends here -->
+
+                <br><br>
+                <div id="tempGet">
+                </div>
+                <button class="btn btn-primary" onclick="postTemp()">View Temperature</button>
+                <button class="btn btn-primary" onclick="updateTemp()">Change Temperature</button>
             </div>
+            <!-- SHH div ends here -->
 
         </div>
+
         <div class="house-diagram">
 
             <canvas id="myCanvas" width="500" height="400" style="border:1px solid black;">
@@ -314,13 +637,17 @@
             </form>
         </div>
         <!-- Popup form -->
+
         <div class="console" id="outputConsole">Console:</div>
 
     </div>
 
+
+
+
     <script>
         /**
-        *Header 
+        *Header
         *@return a layout
         */
         //This is a comment
