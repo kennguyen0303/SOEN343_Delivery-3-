@@ -77,14 +77,16 @@
                 <!--Temperature -->
                 <div class="row justify-content-center" style="font-weight:700;">
                     <label>Outside: </label><br />
-                    <label id='outsideTemp' onclick="submitOutsideTemp()">15.5</label>
+                    <label id='outsideTemp'>15.5</label>
                     <label>&#8451</label>
                 </div>
                 <!--/Temperature -->
                 <div class="row justify-content-center" id="time" style="font-weight:700;">
                 </div>
-                <a href="#" onclick="newTime()">Edit time</a>
-
+                <div class="btc-container" style="display:flex">
+                    <div class="btn btn-primary" onclick="newTime()" style="margin-right: 2px;">Edit time</div>
+                    <div class="btn btn-primary" onclick="submitOutsideTemp()">Edit Temp Outside</div>
+                </div>
             </fieldset>
 
         </div>
