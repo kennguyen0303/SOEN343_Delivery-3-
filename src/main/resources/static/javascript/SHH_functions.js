@@ -15,6 +15,10 @@ class Zone{
         return this.rooms;
     }
 
+    getPeriodicTempSettings(){
+        return this.periodicTempSettings;
+    }
+
     resetRooms(){
         // delete all rooms
         while (this.rooms.length > 0) {
@@ -301,7 +305,6 @@ function isOverlapped(times1, times2){
                 return true;
             }
         }
-
     }
     return false;
 }
@@ -332,11 +335,7 @@ function refreshTable(){
                 endTag.value = '';
                 tempTag.value = '';
             }
-
-
         }
-
-        
     }
 }
 
