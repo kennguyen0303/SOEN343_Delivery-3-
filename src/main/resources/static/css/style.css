@@ -266,3 +266,11 @@ input:checked + .slider:before {
 .open-button:hover {
   opacity: 1;
 }
+
+.modal-dialog {
+  position: relative;
+  display: table; /* This is important */
+  overflow-y: auto;
+  overflow-x: auto;
+  width: auto;
+}
