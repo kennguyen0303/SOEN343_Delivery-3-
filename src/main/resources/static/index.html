@@ -22,31 +22,14 @@
     <script src="./javascript/UIfunctions.js"></script>
     <script src="./javascript/SHH_functions.js"></script>
     <script>
-        $( function() {
-          $( ".draggable" ).draggable();
 
-          $(".droppable").droppable(
-              {
-                  accept: ".draggable",
-                  drop: function(ev,ui){
-                    alert("Dropped");
-                  }
-              }
-          );
-        } );
     </script>
-      <style>
-        .draggable { width: 80px; height: 50px; padding: 0.5em; }
-        </style>
     <title>Smart Home Simulator</title>
     <!-- Custom styles for this template -->
     <link href="./css/style.css" rel="stylesheet">
     <!-- styles for bootstrap -->
 </head>
 
-<header>
-
-</header>
 
 <body onload="loadRoomsDropdown()">
     <div class="layout-container">
@@ -210,83 +193,61 @@
                             </button>
                             </div>
                             <div class="modal-body">
-                                <div class="row">Heading</div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>January</p>
-                                          </div>
+                                <div class="input" style="display:flex">
+                                    <div class="draggable ui-widget-content">
+                                        <p>1</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>2</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>3</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>4</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>5</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>6</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>7</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>8</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>9</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>10</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>11</p>
+                                      </div>
+                                      <div class="draggable ui-widget-content">
+                                        <p>12</p>
+                                      </div>
+                                </div>
+                                <br>
+                                <div class="list-container" style="display:flex">
+                                    <div class="droppable summer">
+                                        <div><h3>Summer</h3></div>
+                                        <ul class="list"></ul>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>February</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>March</p>
-                                          </div>
-                                    </div>
-                                    <div class="droppable col-6">
-                                        Summer
+                                    <div class="droppable winter">
+                                        <div><h3>Winter</h3></div>
+                                        <ul class="list"></ul>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>April</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>May</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>June</p>
-                                          </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>July</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>August</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>September</p>
-                                          </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>October</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>November</p>
-                                          </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="draggable ui-widget-content">
-                                            <p>December</p>
-                                          </div>
-                                    </div>
-                                </div>
-                                
+
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary"   >Save changes</button>
+                            <button type="button" class="btn btn-danger" id="reset"  >Reset</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                             </div>
                         </div>
                         </div>
@@ -641,21 +602,6 @@
         <div class="console" id="outputConsole">Console:</div>
 
     </div>
-
-
-
-
-    <script>
-        /**
-        *Header
-        *@return a layout
-        */
-        //This is a comment
-    </script>
-
-
-
-
 </body>
 
 </html>
