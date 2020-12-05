@@ -24,8 +24,14 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
                     this.x, 
                     this.y,
                     this.width, this.height);
-                //display the name or role
-                //ctx.fillText(color,this.x+15,this.y+50);//format: [0]=room name, [1]: width, [2]: height
+        }
+        else if(move_mode=="HVAC"){
+            ctx.fillStyle = '#ffffff'; // or whatever color the background is.
+            ctx.fillText(this.output, this.x,this.y);
+            this.output=this.status+"||"+this.room.getTemperature();//print ON/OFF status
+            console.log("HVAC for "+this.room.getName()+" x:"+this.x+" y:"+this.y);
+            ctx.fillStyle = '#000000'; // or whatever color the text should be.
+            ctx.fillText(this.output,this.x,this.y);
         }
         else {
             ctx.fillStyle = color;
@@ -52,7 +58,8 @@ function room(){
     this.window_index_array=[];// array of index corresponding to the global array "window_array"
     this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
-    this.temperature;
+    this.temperature = 15.5;//temperature of the room
+    this.desiredTemperature=20;
     //methods 
     /**
      * check if the person is inside the room
@@ -71,6 +78,9 @@ function room(){
     this.getTemperature=()=>{
         return this.temperature;
     }
+    this.getDesiredTemperature=()=>{
+        return this.desiredTemperature;
+    }
     //---------------------------Setters--------------------------
     this.setName=(name)=>{
         this.name=name;
@@ -78,6 +88,10 @@ function room(){
     }
     this.setTemperature=(temperature)=>{
         this.temperature=temperature;
+        console.log("setTemperature() works");
+    }
+    this.setDesiredTemperature=(temperature)=>{
+        this.desiredTemperature=temperature;
     }
     this.set_min_width=(min_width)=>{
         this.min_width=min_width;
@@ -196,4 +210,21 @@ class Light extends door{
                 this.width, this.height);
         }
     }
+}
+
+class HVAC extends door{
+    constructor(a_room){
+        super("", "", "", a_room.min_width+15,a_room.min_height+15 ,"HVAC");
+        this.room=a_room;//a "room" object
+        this.x=parseInt(a_room.min_width)+10+"";
+        this.y=parseInt(a_room.min_height)+30+"";
+        this.status="OFF"; //hardcode right now, later on will be based on the HVAC controller 
+        this.output=this.status+" || "+this.room.getTemperature();//print ON/OFF status
+    }
+    // update(){
+    //     //display the text
+    //     var ctx = myGameArea.canvas.getContext("2d");
+    //     this.output=this.status+" || "+this.room.getTemperature();//print ON/OFF status 
+    //     ctx.fillText(this.output,this.x,this.y);
+    // }
 }

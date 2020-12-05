@@ -10,3 +10,9 @@ var autoMode=false;//boolean for auto mode
 
 // For Continuous Monitoring
 var temperatureTimeout = 1000;
+
+// var shh = new SHH('15.5');
+var summer_month=[];
+var winter_month=[];
+var HVAC_array=[];
+

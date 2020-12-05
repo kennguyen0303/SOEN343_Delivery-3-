@@ -62,7 +62,13 @@ public class UserService {
      */
     public int deleteUser(UUID id) {
 
-        return userDAO.deleteUserById(id);
+        try{
+            return userDAO.deleteUserById(id);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
     /**
@@ -82,7 +88,12 @@ public class UserService {
      * @return an integer, 0 if failed and 1 if successful
      */
     public int loginUser(UUID id){
-        return userDAO.loginUser(id);
+        try {
+            return userDAO.loginUser(id);
+        }catch(Exception e){
+            System.out.print(e.getMessage());
+            return 0;
+        }
     }
 
     /**
@@ -92,7 +103,12 @@ public class UserService {
      * @return an integer, 0 if failed and 1 if successful
      */
     public int setUserLocation(UUID id, String location) {
-        return userDAO.setUserLocation(id, location);
+        try{
+            return userDAO.setUserLocation(id, location);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }
     }
 
     /**
@@ -110,7 +126,11 @@ public class UserService {
      * @param value boolean: true if enabled and false if disabled
      */
     public void grantPermissions(UUID id, String permission, boolean value) {
-        userDAO.grantUserPermissions(id, permission, value);
+        try{
+            userDAO.grantUserPermissions(id, permission, value);
+        }catch(Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.soen343.backend.dao;
 
+import com.soen343.backend.exceptions.UserNotFoundException;
 import com.soen343.backend.model.User;
 import com.soen343.backend.utilities.UserPermissions;
 
@@ -34,14 +35,14 @@ public interface UserDAO {
 
     UserPermissions getCurrentUserPermissions();
 
-    int deleteUserById(UUID id);
+    int deleteUserById(UUID id) throws UserNotFoundException;
 
     int updateUserById(UUID id, User user);
 
-    int loginUser(UUID id);
+    int loginUser(UUID id) throws UserNotFoundException;
 
-    int setUserLocation(UUID id, String location);
+    int setUserLocation(UUID id, String location) throws UserNotFoundException;
 
-    int grantUserPermissions(UUID id, String permission, boolean value);
+    int grantUserPermissions(UUID id, String permission, boolean value) throws UserNotFoundException;
 
 }
