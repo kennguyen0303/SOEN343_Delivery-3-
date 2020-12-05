@@ -30,7 +30,7 @@
 
 </header>
 
-<body>
+<body onload="loadRoomsDropdown()">
     <div class="layout-container">
         <div class="sidebar">
             <fieldset id="simulationTab">
@@ -465,6 +465,11 @@
                 </div>
                 <!-- periodic temperature modal ends here -->
 
+                <br><br>
+                <div id="tempGet">
+                </div>
+                <button class="btn btn-primary" onclick="postTemp()">View Temperature</button>
+                <button class="btn btn-primary" onclick="updateTemp()">Change Temperature</button>
             </div>
             <!-- SHH div ends here -->
 

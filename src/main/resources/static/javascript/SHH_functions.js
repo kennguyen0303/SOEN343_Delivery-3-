@@ -339,3 +339,75 @@ function refreshTable(){
         
     }
 }
+
+var overriddenRooms = [];
+function loadRoomsDropdown()
+{
+    var htmlText = "<select name='roomName' id='roomName'>";
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myObj = JSON.parse(this.responseText);
+            for(var key1 of Object.keys(myObj))
+            {
+                for (var key2 of Object.keys(myObj[key1])){
+                    if(key2=="name"){
+                        overriddenRooms.push(false);
+                        var roomName = myObj[key1][key2][0].toString()
+                        htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
+                    }
+                }
+            }
+
+            htmlText += "</select>";
+            document.getElementById('tempGet').innerHTML = htmlText;
+        };
+    } 
+    xmlhttp.open("GET", "layout.json", true);
+    xmlhttp.send();
+}
+
+function postTemp(){
+    var roomCheck = document.getElementById('roomName').value;
+    var i=0;
+    room_array.forEach(room => {
+
+        if (room.getName() == roomCheck) {
+            console.log(room.getTemperature());
+            var consoleNode = document.createElement("p");
+            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getTemperature();
+            console.log(overriddenRooms[i]);
+            if (overriddenRooms[i])
+            {
+                alertText += " OVERRIDDEN";
+            }           
+            var consoleText = document.createTextNode(alertText);
+            consoleNode.appendChild(consoleText);
+            document.getElementById("outputConsole").appendChild(consoleNode);
+        }
+        i++;
+    });
+    
+}
+
+function updateTemp(){
+    var newTemp = prompt("Enter a new temperature", "0");
+    if(isNaN(newTemp))
+    {
+        alert("Please enter a number");
+        return;
+    }
+    if(newTemp > 60 || newTemp < -10)
+    {
+        alert("This value is unrealistic");
+        return;
+    }
+    var roomCheck = document.getElementById('roomName').value;
+    var i = 0;
+    room_array.forEach(room => {
+        if (room.getName() == roomCheck) {
+            overriddenRooms[i] = true;
+            room.setTemperature(newTemp);
+        }
+    });
+}
