@@ -73,7 +73,8 @@ function renderLayout()//a function for rendering the layout of the house
                  if(key1!=="door"&&key1!=="light") {
 
                      room_array.push(temp_room);//add the room to the array
-                    
+                    var temp_hvac = new HVAC(temp_room);//init the hvac for the room
+                    HVAC_array.push(temp_hvac);//add to the global array
 
                  }
              };
@@ -144,6 +145,12 @@ function loadCanvas(){
                         //clear human stick
                         user_array.forEach(user => {
                             this.context.clearRect(user.x, user.y, 15, 20);
+                        });
+                    }
+                    else if(name == "HVAC"){
+                        //clear the temperature
+                        HVAC_array.forEach(hvac => {
+                            this.context.clearRect(hvac.x, hvac.y, 20, 40);
                         });
                     }
                 }
@@ -229,12 +236,15 @@ function updateAll(){
     light_array.forEach(a_light => {
         a_light.update();
         });
-        door_array.forEach(a_door => {
+    door_array.forEach(a_door => {
             a_door.newPos();
             a_door.update();
         });
-        window_array.forEach(a_window => {
+    window_array.forEach(a_window => {
             a_window.newPos();
             a_window.update();
         });
+    HVAC_array.forEach(hvac => {
+        hvac.update();
+    });
 }
