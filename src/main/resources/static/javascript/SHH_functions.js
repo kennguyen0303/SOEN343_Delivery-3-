@@ -25,6 +25,10 @@ class Zone{
             this.rooms.splice(0, 1)
         }
     }
+
+    getRooms(){
+        return this.rooms;
+    }
 }
 
 class PeriodicTempSetting {
@@ -102,20 +106,37 @@ class SHH{
 
     addZone(newZone){
         this.zones.push(newZone);
+
+        // temperature monitoring
+        heater = new HAVCController(newZone);
+        heater.startMonitoring();
+        this.heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
         for (let i = 0; i < this.zones.length; i++) {
             const zone = this.zones[i];
             if (zone.zoneID == id) {
-                this.splice(i, 1);
+                this.zones.splice(i, 1);
+
+                // remove associated heater component
+                if(this.heaterComponents[i].id == id){
+                    this.heaterComponents.splice(i, 1);
+                }
                 return;
             }
         }
+
         alert("Operation failed, no such a zone found");
     }
-}
 
+
+    getHeatingComponents(){
+        return heatingComponents;
+    }
+
+}
+//------ALEX---------CONFLICT-START
 var shh = new SHH('15.5');
 
 // set the outside temperature according to user's input
@@ -409,4 +430,5 @@ function updateTemp(){
             room.setTemperature(newTemp);
         }
     });
+//CONFLICT 2 END
 }
