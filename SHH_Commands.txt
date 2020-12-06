@@ -1,0 +1,8 @@
+Sun Dec 06 2020 14:08:13 GMT-0500 (Eastern Standard Time): The temperature in the bathroom is:  (period 1<=>24)
+
+Sun Dec 06 2020 14:08:25 GMT-0500 (Eastern Standard Time): The temperature in the bathroom is:  (period 1<=>24)
+
+Sun Dec 06 2020 14:09:40 GMT-0500 (Eastern Standard Time): The temperature in the hallway is:  (period 1<=>37) (period 2<=>33) (period 3<=>-5)
+
+Sun Dec 06 2020 14:33:17 GMT-0500 (Eastern Standard Time): The temperature in the bathroom is:  (period 1<=>10)
+

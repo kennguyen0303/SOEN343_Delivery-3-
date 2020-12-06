@@ -96,12 +96,38 @@ class HAVCController{
         //console.log("Monitor temperature outside have: "+outsideTemperature);
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
-        //console.log(tempSettings);
+        // console.log(tempSettings);
 
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
-                var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() < varCurrentTime.getHours()) ;
+                var timeHours = varCurrentTime.getHours();
+                var timeMinutes = varCurrentTime.getMinutes();
+                var timeHM;
+                var isTime;
+                if (timeHours < '10') {
+                    timeHours = '0' + timeHours;
+                }
+                if(timeMinutes < '10'){
+                    timeMinutes = '0' + timeMinutes;
+                }
+                timeHM = timeHours + ':' + timeMinutes;
+
+                //normal case
+                if (tempSettings[i].getStartTime() < tempSettings[i].getEndTime()) {
+                    console.log('normalcase');
+                    isTime = (timeHM >= tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() > timeHM) ;
+                }
+                // all day long
+                else if (tempSettings[i].getStartTime() == tempSettings[i].getEndTime()) {
+                    console.log('alldaylong');
+                    isTime = true;
+                }
+                //overnight case
+                else{
+                    console.log('overnight');
+                    isTime = (timeHM >= tempSettings[i].getStartTime()) || (tempSettings[i].getEndTime() > timeHM) ;
+                }
                 if(isTime){
                     idealTemperature = tempSettings[i].getTempSetting();
                 }

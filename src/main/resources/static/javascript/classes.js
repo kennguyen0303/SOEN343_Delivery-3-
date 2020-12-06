@@ -29,7 +29,7 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
             ctx.fillStyle = '#ffffff'; // or whatever color the background is.
             ctx.fillText(this.output, this.x,this.y);
             this.output=this.status+"||"+this.room.getTemperature();//print ON/OFF status
-            console.log("HVAC for "+this.room.getName()+" x:"+this.x+" y:"+this.y);
+            // console.log("HVAC for "+this.room.getName()+" x:"+this.x+" y:"+this.y);
             ctx.fillStyle = '#000000'; // or whatever color the text should be.
             ctx.fillText(this.output,this.x,this.y);
         }
