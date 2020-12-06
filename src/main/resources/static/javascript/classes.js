@@ -59,7 +59,8 @@ function room(){
     this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
     this.temperature = 15.5;//temperature of the room
-    this.desiredTemperature=20;
+    this.desiredTemperature;
+    this.isOverriden = false;
     //methods 
     /**
      * check if the person is inside the room
@@ -79,7 +80,25 @@ function room(){
         return this.temperature;
     }
     this.getDesiredTemperature=()=>{
-        return this.desiredTemperature;
+        if (this.isOverriden) {
+            return this.desiredTemperature;
+        } else {
+            // obtain the zone
+            for (let i = 0; i < shh.zones.length; i++) {
+                const zone = shh.zones[i];
+                if (zone.rooms.length > 0 && zone.getPeriodicTempSettings().length > 0) {
+                    for (let j = 0; j < zone.rooms.length; j++) {
+                        const room = zone.rooms[j];
+                        if (room.getName() == this.getName()) {
+                            // console.log(zone.getPeriodicTempSettings());
+                            return zone.getPeriodicTempSettings();
+                        }
+                    }
+                }
+            }
+            //no corresponding zone is found
+            return ' outer 24';
+        }
     }
     //---------------------------Setters--------------------------
     this.setName=(name)=>{
@@ -92,6 +111,7 @@ function room(){
     }
     this.setDesiredTemperature=(temperature)=>{
         this.desiredTemperature=temperature;
+        this.isOverriden = true;
     }
     this.set_min_width=(min_width)=>{
         this.min_width=min_width;
@@ -108,6 +128,9 @@ function room(){
     this.set_max_height=(max_height)=>{
         this.max_height=max_height;
         return 1;
+    }
+    this.resetOverriden=()=>{
+        this.isOverriden = false;
     }
     //---------------------------- Add items -------------------------
     this.add_window=(index)=>{

@@ -15,26 +15,15 @@ class Zone{
         return this.rooms;
     }
 
-//CONFLICT START
-    // TODO check if all periodic temperature settings can cover the whole day
-    isFullyCovered(){
-
+    getPeriodicTempSettings(){
+        return this.periodicTempSettings;
     }
 
-    // TODO set default temperature for uncovered periods
-    setDefaultTemperature(){
-        // TODO the default temperature will be 24.0
-//CONFLICT MIDDLE POINT
     resetRooms(){
         // delete all rooms
         while (this.rooms.length > 0) {
             this.rooms.splice(0, 1)
         }
-//CONFLICT11 END
-    }
-
-    getRooms(){
-        return this.rooms;
     }
 }
 
@@ -333,7 +322,6 @@ function isOverlapped(times1, times2){
                 return true;
             }
         }
-
     }
     return false;
 }
@@ -364,15 +352,10 @@ function refreshTable(){
                 endTag.value = '';
                 tempTag.value = '';
             }
-
-
         }
-
-        
     }
 }
 
-var overriddenRooms = [];
 function loadRoomsDropdown()
 {
     var htmlText = "<select name='roomName' id='roomName'>";
@@ -384,7 +367,6 @@ function loadRoomsDropdown()
             {
                 for (var key2 of Object.keys(myObj[key1])){
                     if(key2=="name"){
-                        overriddenRooms.push(false);
                         var roomName = myObj[key1][key2][0].toString()
                         htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
                     }
@@ -397,6 +379,9 @@ function loadRoomsDropdown()
     } 
     xmlhttp.open("GET", "layout.json", true);
     xmlhttp.send();
+
+    document.getElementById("winterDefault").innerHTML = "Desired winter temperature: " + desiredWinterTemp;
+    document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
 }
 
 function postTemp(){
@@ -405,11 +390,20 @@ function postTemp(){
     room_array.forEach(room => {
 
         if (room.getName() == roomCheck) {
-            console.log(room.getTemperature());
+            //console.log(room.getDesiredTemperature());
             var consoleNode = document.createElement("p");
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getTemperature();
-            console.log(overriddenRooms[i]);
-            if (overriddenRooms[i])
+            roomsTempVals = room.getDesiredTemperature();
+
+            if(room.isOverriden)
+            {
+                alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
+            }
+            else{
+            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
+            }
+            //console.log(room.isOverriden);
+            
+            if (room.isOverriden)
             {
                 alertText += " OVERRIDDEN";
             }           
@@ -438,9 +432,32 @@ function updateTemp(){
     var i = 0;
     room_array.forEach(room => {
         if (room.getName() == roomCheck) {
-            overriddenRooms[i] = true;
-            room.setTemperature(newTemp);
+            room.setDesiredTemperature(newTemp);
         }
     });
 //CONFLICT 2 END
+}
+
+function resetTemp(){
+    var roomCheck = document.getElementById('roomName').value;
+    room_array.forEach(room => {
+        if (room.getName() == roomCheck) {
+            room.resetOverriden();
+        }
+    });
+}
+
+function changeDesired(season)
+{
+    var desired = prompt("What do you want to change the desired temperature to?", "0");
+
+    if(season)
+    {
+        desiredWinterTemp = desired;
+        document.getElementById("winterDefault").innerHTML = "Desired winter temperature: " + desiredWinterTemp;
+    }
+    else{
+        desiredSummerTemp = desired;
+        document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
+    }
 }

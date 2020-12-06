@@ -15,4 +15,6 @@ var temperatureTimeout = 1000;
 var summer_month=[];
 var winter_month=[];
 var HVAC_array=[];
+var desiredWinterTemp = 21;
+var desiredSummerTemp = 21;
 
