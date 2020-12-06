@@ -403,7 +403,23 @@ function postTemp(){
                 alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
             }
             else{
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
+                var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is ";
+               
+                if(typeof roomsTempVals[0] == 'undefined')
+                {}else
+                {
+                    alertText += roomsTempVals[0].getTempSetting() + " ";
+                }
+                if(typeof roomsTempVals[1] == 'undefined')
+                {}else
+                {
+                    alertText += roomsTempVals[1].getTempSetting() + " ";
+                }
+                if(typeof roomsTempVals[2] == 'undefined')
+                {}else
+                {
+                    alertText += roomsTempVals[2].getTempSetting() + " ";
+                }
             }
             //console.log(room.isOverriden);
             
