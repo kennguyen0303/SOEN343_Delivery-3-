@@ -1,6 +1,7 @@
 function renderLayout()//a function for rendering the layout of the house
 {
      var xmlhttp = new XMLHttpRequest();//creating a request for AJAX to load the layout
+     var count=0;
          xmlhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {//when the layout file is successfully loaded, executes the below codes
              myObj = JSON.parse(this.responseText);//parse the JSON data to an JAvascript object
@@ -73,7 +74,9 @@ function renderLayout()//a function for rendering the layout of the house
                  if(key1!=="door"&&key1!=="light") {
 
                      room_array.push(temp_room);//add the room to the array
-                    var temp_hvac = new HVAC(temp_room);//init the hvac for the room
+                     console.log(heatingComponents);
+                    var temp_hvac = new HVAC(temp_room,heatingComponents[count++]);//init the hvac for the room
+                    
                     HVAC_array.push(temp_hvac);//add to the global array
 
                  }

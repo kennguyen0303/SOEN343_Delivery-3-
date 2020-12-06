@@ -95,7 +95,7 @@ class HAVCController{
         // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
         // outsideTemperature=parseFloat(outsideTemperature);
         var outsideTemperature=this.outsideTemperature;
-        console.log("Monitor temperature outside have: "+outsideTemperature);
+        //console.log("Monitor temperature outside have: "+outsideTemperature);
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
         //console.log(tempSettings);
@@ -205,6 +205,7 @@ class HAVCController{
           room.temperature = increase ? tempPlus: tempMinus;
        }
        for(var i=0;i<HVAC_array.length;i++){
+        HVAC_array[i].updateStatus(this);
         HVAC_array[i].update();
        }
     }
