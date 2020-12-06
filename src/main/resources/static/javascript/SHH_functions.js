@@ -1,5 +1,3 @@
-// **************************
-
 class Zone{
     constructor(zoneID){
         this.zoneID = zoneID;
@@ -156,7 +154,7 @@ class HAVCController{
             document.getElementById("outputConsole").appendChild(consoleNode);
 
            // write to output log
-           writeToFile(text);
+           writeToSHHFile(text);
         }
     }
 
@@ -317,15 +315,12 @@ class SHH{
                 return;
             }
         }
-
         alert("Operation failed, no such a zone found");
     }
-
-
+    
     getHeatingComponents(){
         return heatingComponents;
     }
-
 }
 //-----DEFINING OBJECTS------------
 var shh = new SHH('15.5');
@@ -500,9 +495,6 @@ function submitTemps(){
             }
         }
     }
-
-    // TODO start monitor temperature under new settings
-
     $('#tempModal').modal('hide');
 }
 
@@ -609,7 +601,6 @@ function postTemp(){
         }
     });
 
-//<<<<<<< GUI_HVAC
     // if the desiredTemp is overriden
     if (whichRoom.isOverriden) {
         // display the desiredTemp stored in the room
@@ -633,38 +624,11 @@ function postTemp(){
             if(typeof whichZone.getPeriodicTempSettings()[2] != 'undefined'){
                 tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + ") ";
             }
-//=======
-//        if (room.getName() == roomCheck) {
-//            //console.log(room.getDesiredTemperature());
-//            var consoleNode = document.createElement("p");
-//            roomsTempVals = room.getDesiredTemperature();
-//            var alertText;
-//            if(room.isOverriden)
-//            {
-//                 alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
-//             }
-//             else if(roomsTempVals.length>1){
-//                  alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
-//             }
-//             else alertText="No zone, no setting -> Desired temp for this room is: "+room.getDesiredTemperature()+" by standard";
-//             //console.log(alertText);
-            
-//             if (room.isOverriden)
-//             {
-//                 alertText += " OVERRIDDEN";
-//             }           
-//             var consoleText = document.createTextNode(alertText);
-//             consoleNode.appendChild(consoleText);
-//             document.getElementById("outputConsole").appendChild(consoleNode);
-// >>>>>>> observer_pattern
         }
     }
 
     //generate the output string
     var outputText = timeText + ": The temperature in the " + roomCheck + " is: " + tempText;
-    console.log(typeof outputText);
-    var outputString = new String();
-    outputString = outputText.toString();
     var consoleText = document.createTextNode(outputText);
     var consoleNode = document.createElement("p");
     consoleNode.appendChild(consoleText);
@@ -718,7 +682,6 @@ function changeDesired(season)
     }
 }
 
-
 //This method will write msg to a give log file
 function writeToSHHFile(msg){
 
@@ -726,11 +689,10 @@ function writeToSHHFile(msg){
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert('Log information has been saved to the SHP_command.txt');
+            alert('Log information has been saved to the SHH_command.txt');
         }
     }
 
     xhttp.open('POST', 'http://localhost:8080/api/user/shhWirter/' + msg, true);
     xhttp.send();
 }
-
