@@ -113,6 +113,9 @@ class SHH{
 }
 
 var shh = new SHH('15.5');
+var shc_observer=new SHC_observer(shh);
+var shc_Subject = new SHC_Subject();
+shc_Subject.addObserver(shc_observer);//add the observer
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){

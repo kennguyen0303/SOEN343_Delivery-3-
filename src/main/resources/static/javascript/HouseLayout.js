@@ -205,7 +205,8 @@ function moveUser() {
                         }
                     user.location=a_room.getName();//update the location
                     updateLocationToBackend(user);
-                    console.log("New location detected: "+user.location+"New number detected: "+a_room.getNumberOfOccupant());
+                    var msg= "New location detected: "+user.location+" number of occupants detected: "+a_room.getNumberOfOccupant();
+                    shc_Subject.notifyAll(msg);
                     } 
                 }
                 else{//not inside the room
@@ -224,6 +225,8 @@ function moveUser() {
                     user.location="outside";//update the location
                     updateLocationToBackend(user);
                     console.log("New location detected: "+user.location);
+                    var msg="New location detected: "+user.location;
+                    shc_Subject.notifyAll(msg);
                 }
             }
             count++;
