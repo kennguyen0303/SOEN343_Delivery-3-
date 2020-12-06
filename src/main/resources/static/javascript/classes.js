@@ -24,8 +24,14 @@ function door(width, height, color, x, y,move_mode) {//in case of human-stick, c
                     this.x, 
                     this.y,
                     this.width, this.height);
-                //display the name or role
-                //ctx.fillText(color,this.x+15,this.y+50);//format: [0]=room name, [1]: width, [2]: height
+        }
+        else if(move_mode=="HVAC"){
+            ctx.fillStyle = '#ffffff'; // or whatever color the background is.
+            ctx.fillText(this.output, this.x,this.y);
+            this.output=this.status+"||"+this.room.getTemperature();//print ON/OFF status
+            console.log("HVAC for "+this.room.getName()+" x:"+this.x+" y:"+this.y);
+            ctx.fillStyle = '#000000'; // or whatever color the text should be.
+            ctx.fillText(this.output,this.x,this.y);
         }
         else {
             ctx.fillStyle = color;
@@ -53,7 +59,8 @@ function room(){
     this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
     this.temperature = 15.5;//temperature of the room
-    this.desiredTemperature=20;
+    this.desiredTemperature;
+    this.isOverriden = false;
     //methods 
     /**
      * check if the person is inside the room
@@ -73,7 +80,26 @@ function room(){
         return this.temperature;
     }
     this.getDesiredTemperature=()=>{
-        return this.desiredTemperature;
+        if (this.isOverriden) {
+            return this.desiredTemperature;
+        } else {
+            // obtain the zone
+            for (let i = 0; i < shh.zones.length; i++) {
+                const zone = shh.zones[i];
+                if (zone.rooms.length > 0 && zone.getPeriodicTempSettings().length > 0) {
+                    for (let j = 0; j < zone.rooms.length; j++) {
+                        const room = zone.rooms[j];
+                        if (room.getName() == this.getName()) {
+                            // console.log(zone.getPeriodicTempSettings());
+                            return zone.getPeriodicTempSettings();
+                        }
+                    }
+                }
+            }
+            //no corresponding zone is found
+            console.log(this.getName()+" has no zone");
+            return 24;
+        }
     }
     //---------------------------Setters--------------------------
     this.setName=(name)=>{
@@ -86,6 +112,7 @@ function room(){
     }
     this.setDesiredTemperature=(temperature)=>{
         this.desiredTemperature=temperature;
+        this.isOverriden = true;
     }
     this.set_min_width=(min_width)=>{
         this.min_width=min_width;
@@ -102,6 +129,9 @@ function room(){
     this.set_max_height=(max_height)=>{
         this.max_height=max_height;
         return 1;
+    }
+    this.resetOverriden=()=>{
+        this.isOverriden = false;
     }
     //---------------------------- Add items -------------------------
     this.add_window=(index)=>{
@@ -203,5 +233,24 @@ class Light extends door{
                 this.y,
                 this.width, this.height);
         }
+    }
+}
+
+class HVAC extends door{
+    constructor(a_room,a_heater){
+        super("", "", "", a_room.min_width+15,a_room.min_height+15 ,"HVAC");
+        this.room=a_room;//a "room" object
+        this.x=parseInt(a_room.min_width)+10+"";
+        this.y=parseInt(a_room.min_height)+30+"";
+        this.temp=this.room.getTemperature();
+        console.log("room temp: "+this.temp);
+        this.status=a_heater.state; //hardcode right now, later on will be based on the HVAC controller 
+        this.output=this.status+" || "+this.temp;//print ON/OFF status
+        this.heater=a_heater;
+    }
+    //take the status
+    updateStatus(obj){
+        this.heater=obj;
+        this.status=obj.state;
     }
 }

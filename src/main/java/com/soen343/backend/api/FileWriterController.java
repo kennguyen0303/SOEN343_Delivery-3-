@@ -34,4 +34,13 @@ public class FileWriterController {
         FileWriter shcWirter = new FileWriter();
         shcWirter.saveMsg(msg, "SHC_Commands.txt");
     }
+
+    /**
+     * Request to save shh profiles
+     */
+    @PostMapping(value = "api/user/shhWirter/{msg}")
+    public void saveSHHMsg(@PathVariable("msg") String msg) {
+        FileWriter shhWirter = new FileWriter();
+        shhWirter.saveMsg(msg, "SHH_Commands.txt");
+    }
 }

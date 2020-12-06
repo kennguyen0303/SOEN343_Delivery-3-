@@ -77,14 +77,16 @@
                 <!--Temperature -->
                 <div class="row justify-content-center" style="font-weight:700;">
                     <label>Outside: </label><br />
-                    <label id='outsideTemp' onclick="submitOutsideTemp()">15.5</label>
+                    <p id='outsideTemp'>15.5</p>
                     <label>&#8451</label>
                 </div>
                 <!--/Temperature -->
                 <div class="row justify-content-center" id="time" style="font-weight:700;">
                 </div>
-                <a href="#" onclick="newTime()">Edit time</a>
-
+                <div class="btc-container" style="display:flex">
+                    <div class="btn btn-primary" onclick="newTime()" style="margin-right: 2px;">Edit time</div>
+                    <div class="btn btn-primary" onclick="submitOutsideTemp()">Edit Temp Outside</div>
+                </div>
             </fieldset>
 
         </div>
@@ -184,80 +186,85 @@
                     <div id="SetRestrictedTemperature"></div>
                 </div>
                 <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                        Set Months for Summer/Winter
-                    </button>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                    Set Months for Summer/Winter
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Set months</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Set months</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <div class="input" style="display:flex">
                                     <div class="draggable ui-widget-content">
                                         <p>1</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>2</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>3</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>4</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>5</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>6</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>7</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>8</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>9</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>10</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>11</p>
-                                      </div>
-                                      <div class="draggable ui-widget-content">
+                                    </div>
+                                    <div class="draggable ui-widget-content">
                                         <p>12</p>
-                                      </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <div class="list-container" style="display:flex">
                                     <div class="droppable summer">
-                                        <div><h3>Summer</h3></div>
+                                        <div>
+                                            <h3>Summer</h3>
+                                        </div>
                                         <ul class="list"></ul>
                                     </div>
                                     <div class="droppable winter">
-                                        <div><h3>Winter</h3></div>
+                                        <div>
+                                            <h3>Winter</h3>
+                                        </div>
                                         <ul class="list"></ul>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-danger" id="reset"  >Reset</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger" id="reset">Reset</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                             </div>
                         </div>
-                        </div>
                     </div>
+                </div>
             </div>
 
             <div id="SHCore" class="tabcontent">
@@ -548,9 +555,17 @@
 
                 <br><br>
                 <div id="tempGet">
-                </div>
+                </div> <br>
                 <button class="btn btn-primary" onclick="postTemp()">View Temperature</button>
                 <button class="btn btn-primary" onclick="updateTemp()">Change Temperature</button>
+                <button class="btn btn-primary" onclick="resetTemp()">Reset Override</button>
+                <br>
+                <br>
+                <span id="winterDefault"></span> <button class="btn btn-primary"
+                    onclick="changeDesired(true)">Change</button> <br>
+                <br>
+                <span id="summerDefault"></span> <button class="btn btn-primary"
+                    onclick="changeDesired(false)">Change</button> <br>
             </div>
             <!-- SHH div ends here -->
 

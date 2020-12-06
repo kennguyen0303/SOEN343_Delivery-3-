@@ -47,6 +47,11 @@ function newTime() {
 function tikTok() {
     var second = varCurrentTime.getSeconds() + 1;
     varCurrentTime.setSeconds(second);
+    // if(room_array.length>0){
+    //     console.log(room_array[2].getName()+":"+room_array[2].temperature++);
+    //     HVAC_array[2].update();
+        
+    // }
     document.getElementById('time').innerHTML = varCurrentTime.toLocaleString("en-US");
     if (document.getElementById('awayModeButton').innerHTML == 'ON') {
         if (lightSchedule.length == 0) {

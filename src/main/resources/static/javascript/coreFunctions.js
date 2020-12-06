@@ -397,11 +397,55 @@ function writeToSHCFile(msg){
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert('Log information has been saved to the SHC_command.txt');
+            
         }
     }
 
     xhttp.open('POST', 'http://localhost:8080/api/user/shcWirter/' + msg, true);
     xhttp.send();
+
+}
+
+//----------------SHC Observer pattern ----------------------
+class SHC_Subject{
+    constructor(){
+        this.listOfObserver=[]
+    }
+    addObserver(obj){
+        this.listOfObserver.push(obj);
+        console.log(this.listOfObserver);//for testing
+    }
+    removeObserver(obj){
+        var index=this.listOfObserver.indexOf(obj);
+        if(index>=0){
+            var removedResult=this.listOfObserver.splice(index,1);//remove the observer
+            console.log(removedResult);//for testing
+            console.log(this.listOfObserver);
+        }
+        else console.log("Not found"+obj);
+    }
+    notifyAll(msg){
+        this.listOfObserver.forEach(an_observer => {
+            an_observer.update(msg);//pass the message to the observer for update
+            writeToSHCFile("SHC sent to "+an_observer.getName()+" "+msg);
+        });
+    }
+}
+
+class SHC_observer{
+    constructor(obj){
+        this.obj=obj;//make a reference to the obj
+        this.name=obj.constructor.name; //take the name 
+    }
+    getName(){
+        return this.name;
+    }
+    /**
+     * According to the professor, SHH does nothing when receive the update
+     * @param {*} msg 
+     */
+    update(msg){
+        console.log(this.name+" received message from SHC: "+msg);
+    }
 
 }
