@@ -97,7 +97,6 @@ class HAVCController{
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
         // console.log(tempSettings);
-
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
@@ -120,12 +119,12 @@ class HAVCController{
                 }
                 // all day long
                 else if (tempSettings[i].getStartTime() == tempSettings[i].getEndTime()) {
-                    console.log('alldaylong');
+                    //console.log('alldaylong');
                     isTime = true;
                 }
                 //overnight case
                 else{
-                    console.log('overnight');
+                    //console.log('overnight');
                     isTime = (timeHM >= tempSettings[i].getStartTime()) || (tempSettings[i].getEndTime() > timeHM) ;
                 }
                 if(isTime){
@@ -251,6 +250,7 @@ class HAVCController{
      */
     updateAwayModeStatus(msg){
         this.awayModeStatus=msg;
+        console.log("Heater receive: "+msg+" new away mode:"+this.awayModeStatus);
     }
     /**
      * return the away mode
@@ -305,8 +305,9 @@ class SHH{
      */
     setAwayMode(msg){
         this.awayMode=msg;
+        console.log("SHH receive: "+msg+" new away mode:"+this.awayMode);
         heatingComponents.forEach(heater => {
-            
+            heater.updateAwayModeStatus(msg);
         });
     }
     getAllZones(){
@@ -358,6 +359,7 @@ var shc_Subject = new SHC_Subject();
 shc_Subject.addObserver(shc_observer);//add the observer
 var shp_observer=new SHP_observer(shh);
 var shp_Subject = new SHP_Subject();
+shp_Subject.addObserver(shp_observer);//add the observer
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){
