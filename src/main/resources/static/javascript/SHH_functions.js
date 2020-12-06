@@ -90,12 +90,17 @@ class HAVCController{
     }
 
     monitorTemperature(){
-        // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
-        // outsideTemperature=parseFloat(outsideTemperature);
+
         var outsideTemperature=this.outsideTemperature;
+<<<<<<< HEAD
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
 
+=======
+
+        var tempSettings = (this.zone).getPeriodicTempSettings();
+        var idealTemperature = 18;
+>>>>>>> 43d4512ff54200a9932cd98af6901a27d2a9390c
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 var timeHours = varCurrentTime.getHours();
@@ -128,6 +133,17 @@ class HAVCController{
             }
         }
 
+        if(this.getAwayModeStatus() == 'ON'){
+            if(this.getIsSummer()){
+                console.log("summer");
+                idealTemperature = desiredSummerTemp;
+            }
+            else if(this.getIsWinter()){
+                console.log("winter");
+                idealTemperature = desiredWinterTemp;
+            }
+         }
+
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
             var room = rooms[i];
@@ -145,10 +161,13 @@ class HAVCController{
             // adjust temperature if the simulation is not stopped
             if(this.state != HAVCStates.states.STOPPED){
                 var temperatureInRoom = rooms[i].getTemperature();
-                this.setHAVCState(idealTemperature, temperatureInRoom);
+                 var tempToUse = room.isOverriden ? room.desiredTemperature : idealTemperature;
+
+                var temperatureInRoom = rooms[i].getTemperature();
+                this.setHAVCState(tempToUse, temperatureInRoom);
 
                 if(this.state == HAVCStates.states.RUNNING){
-                   var increase = (idealTemperature > temperatureInRoom);
+                   var increase = (tempToUse > temperatureInRoom);
                    this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
@@ -165,7 +184,7 @@ class HAVCController{
     }
 
     monitorPipes(temperatureInRoom){
-        if(temperatureInRoom == 0){
+        if(temperatureInRoom <= 0){
             // output to console
             var consoleNode = document.createElement("p");
             var text = "Caution! Temperature below zero. Pipes may burst."
@@ -198,15 +217,7 @@ class HAVCController{
     }
 
     openWindowsInSummer(room){
-         var seasonNum = varCurrentTime.getMonth();
-         var isSummer = false;
-         for(let i=0; i < summer_month.length; i++){
-            if(seasonNum == summer_month[i]){
-                isSummer = true;
-            }
-         }
-
-         if(isSummer){
+         if(this.getIsSummer()){
              if(this.getAwayModeStatus() == 'OFF'){
                   var indexes = room.window_index_array;
                   var index = indexes[0];
@@ -242,12 +253,35 @@ class HAVCController{
      */
     updateAwayModeStatus(msg){
         this.awayModeStatus=msg;
+        console.log("Heater receive: "+msg+" new away mode:"+this.awayModeStatus);
     }
     /**
      * return the away mode
      */
     getAwayModeStatus(){
         return this.awayModeStatus;
+    }
+
+    getIsSummer(){
+        var seasonNum = varCurrentTime.getMonth() + 1;
+        var isSummer = false;
+        for(let i=0; i < summer_month.length; i++){
+            if(seasonNum == summer_month[i]){
+               isSummer = true;
+                }
+        }
+        return isSummer;
+    }
+
+    getIsWinter(){
+      var seasonNum = varCurrentTime.getMonth() + 1;
+      var isWinter = false;
+      for(let i=0; i < winter_month.length; i++){
+        if(seasonNum == winter_month[i]){
+           isWinter = true;
+        }
+      }
+        return isWinter;
     }
 }
 
@@ -296,8 +330,9 @@ class SHH{
      */
     setAwayMode(msg){
         this.awayMode=msg;
+        console.log("SHH receive: "+msg+" new away mode:"+this.awayMode);
         heatingComponents.forEach(heater => {
-            
+            heater.updateAwayModeStatus(msg);
         });
     }
     getAllZones(){
@@ -344,6 +379,7 @@ var shc_Subject = new SHC_Subject();
 shc_Subject.addObserver(shc_observer);//add the observer
 var shp_observer=new SHP_observer(shh);
 var shp_Subject = new SHP_Subject();
+shp_Subject.addObserver(shp_observer);//add the observer
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){

@@ -176,7 +176,9 @@ function setAwayMode(){
           
             if (document.getElementById('awayModeButton').innerHTML == 'ON') {
                 document.getElementById('awayModeButton').innerHTML = 'OFF';
+                alert("Notifying all");
                 shp_Subject.notifyAll('OFF');//NOTIFY THE OBSERVERS
+                alert("Notifying done");
             }
           
             else if(!canSetAwayMode){
@@ -190,7 +192,9 @@ function setAwayMode(){
             else if (document.getElementById('awayModeButton').innerHTML == 'OFF') {
     
                 document.getElementById('awayModeButton').innerHTML = 'ON';
+                alert("Notifying all");
                 shp_Subject.notifyAll('ON');//NOTIFY THE OBSERVERS
+                alert("Notifying done");
                 controlAllDoor('close');
 
                 //save information to SHP log file
@@ -261,7 +265,10 @@ class SHP_Subject{
         else console.log("Not found"+obj);
     }
     notifyAll(msg){//notify when away mode'status is changed
+        alert("Inside notify all");
+        console.log(this.listOfObserver);
         this.listOfObserver.forEach(an_observer => {
+            console.log("Notifying AWAY MODE CHANGE TO: "+msg);
             an_observer.update(msg);//pass the message to the observer for update
             writeToFile("SHP sent to "+an_observer.getName()+": "+msg);
             //writeToSHCFile("SHC sent to "+an_observer.getName()+" "+msg);
