@@ -86,14 +86,14 @@ class HAVCController{
 
     constructor(newZone){
         this.zone = newZone;
-        console.log(this.zone);
+        //console.log(this.zone);
         this.id = newZone.zoneID;
         this.state = HAVCStates.states.PAUSED;
     }
 
     monitorTemperature(){
+        //console.log(this);
         var outsideTemperature = document.getElementById('outsideTemp');
-        //console.log(this.zone);
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 0;
 
@@ -125,11 +125,11 @@ class HAVCController{
 
                 if(this.state == HAVCStates.states.RUNNING){
                    increase = (idealTemperature > temperatureInRoom);
-                   updateRoomTemperature(increase, 0.1, room);
+                   this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
                     increase = (outsideTemperature > temperatureInRoom);
-                    updateRoomTemperature(increase, 0.05, room);
+                    this.updateRoomTemperature(increase, 0.05, room);
                 }
             }
 
@@ -142,6 +142,7 @@ class HAVCController{
 
 
     startMonitoring(){
+        console.log(this);
         this.monitorTemperature();
     }
 
