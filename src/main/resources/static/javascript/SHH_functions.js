@@ -73,7 +73,10 @@ class SHH{
         this.outdoorTemp = outdoorTemp;
         this.zones = new Array();
         for (let i = 0; i < 6; i++) {
-            var zone = new Zone(i);
+            var zone = new Zone();
+            //set the temperature defautly to 24
+            var tempSetting = new PeriodicTempSetting(0, '00:00', '00:00', 24.0)
+            zone.periodicTempSettings.push(tempSetting);
             this.zones.push(zone);
         }
         //zones[0] is for unset rooms
@@ -190,17 +193,22 @@ function submitZones(){
         if (room.getName() == 'hallway') {
             shh.zones[roomZones['hallway']].addRoom(room);
         }
-        if (room.getName() == 'garage') {
+        else if (room.getName() == 'garage') {
             shh.zones[roomZones['garage']].addRoom(room);
         }
-        if (room.getName() == 'kitchen') {
+        else if (room.getName() == 'kitchen') {
             shh.zones[roomZones['kitchen']].addRoom(room);
         }
-        if (room.getName() == 'bedroom') {
+        else if (room.getName() == 'bedroom') {
             shh.zones[roomZones['bedroom']].addRoom(room);
         }
-        if (room.getName() == 'bathroom') {
+        else if (room.getName() == 'bathroom') {
             shh.zones[roomZones['bathroom']].addRoom(room);
+        }
+        // no zone is set for this room
+        // put it into the zone[0]
+        else if(room.getName() != 'backyard'){  // backyard is outdoor
+            shh.zones[0].addRoom(room);
         }
     });
 
@@ -368,7 +376,9 @@ function loadRoomsDropdown()
                 for (var key2 of Object.keys(myObj[key1])){
                     if(key2=="name"){
                         var roomName = myObj[key1][key2][0].toString()
-                        htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
+                        if (roomName != 'backyard') {
+                            htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
+                        }
                     }
                 }
             }
@@ -386,34 +396,58 @@ function loadRoomsDropdown()
 
 function postTemp(){
     var roomCheck = document.getElementById('roomName').value;
-    var i=0;
-    room_array.forEach(room => {
-
-        if (room.getName() == roomCheck) {
-            //console.log(room.getDesiredTemperature());
-            var consoleNode = document.createElement("p");
-            roomsTempVals = room.getDesiredTemperature();
-
-            if(room.isOverriden)
-            {
-                alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
-            }
-            else{
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
-            }
-            //console.log(room.isOverriden);
-            
-            if (room.isOverriden)
-            {
-                alertText += " OVERRIDDEN";
-            }           
-            var consoleText = document.createTextNode(alertText);
-            consoleNode.appendChild(consoleText);
-            document.getElementById("outputConsole").appendChild(consoleNode);
+    var tempText = ' ';
+    var timeText = varCurrentTime;
+    // find which zone and room this roomName belongs to
+    var whichRoom;
+    var whichZone;
+    shh.zones.forEach(zone => {
+        if (zone.rooms.length > 0) {
+            zone.rooms.forEach(room => {
+                if (room.getName() == roomCheck) {
+                    whichZone = zone;
+                    whichRoom = room;
+                }
+            });
         }
-        i++;
     });
-    
+
+    // if the desiredTemp is overriden
+    if (whichRoom.isOverriden) {
+        // display the desiredTemp stored in the room
+        tempText = whichRoom.getDesiredTemperature() + ' (OVERRIDEN)';
+    }
+
+    // if the room is not overriden
+    else{
+        // the zone is not set, so defaultly set to 24
+        if (whichZone.zoneID == '0') {
+            tempText += '24'
+        }
+        // the zone is set by the user's inputs
+        else{
+            if(typeof whichZone.getPeriodicTempSettings()[0] != 'undefined'){
+                tempText += '(period 1<=>' + whichZone.getPeriodicTempSettings()[0].getTempSetting() + ") ";
+            }
+            if(typeof whichZone.getPeriodicTempSettings()[1] != 'undefined'){
+                tempText += '(period 2<=>' +  whichZone.getPeriodicTempSettings()[1].getTempSetting() + ") ";
+            }
+            if(typeof whichZone.getPeriodicTempSettings()[2] != 'undefined'){
+                tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + ") ";
+            }
+        }
+    }
+
+    //generate the output string
+    var outputText = timeText + ": The temperature in the " + roomCheck + " is: " + tempText;
+    console.log(typeof outputText);
+    var outputString = new String();
+    outputString = outputText.toString();
+    var consoleText = document.createTextNode(outputText);
+    var consoleNode = document.createElement("p");
+    consoleNode.appendChild(consoleText);
+    document.getElementById("outputConsole").appendChild(consoleNode);
+    writeToSHHFile(outputText);
 }
 
 function updateTemp(){
@@ -460,4 +494,19 @@ function changeDesired(season)
         desiredSummerTemp = desired;
         document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
     }
+}
+
+//This method will write msg to a give log file
+function writeToSHHFile(msg){
+
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert('Log information has been saved to the SHP_command.txt');
+        }
+    }
+
+    xhttp.open('POST', 'http://localhost:8080/api/user/shhWirter/' + msg, true);
+    xhttp.send();
 }
