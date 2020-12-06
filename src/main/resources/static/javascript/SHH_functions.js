@@ -392,8 +392,17 @@ function postTemp(){
         if (room.getName() == roomCheck) {
             //console.log(room.getDesiredTemperature());
             var consoleNode = document.createElement("p");
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
+            roomsTempVals = room.getDesiredTemperature();
+
+            if(room.isOverriden)
+            {
+                alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
+            }
+            else{
+            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
+            }
             //console.log(room.isOverriden);
+            
             if (room.isOverriden)
             {
                 alertText += " OVERRIDDEN";
