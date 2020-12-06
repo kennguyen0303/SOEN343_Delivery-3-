@@ -97,7 +97,8 @@ function room(){
                 }
             }
             //no corresponding zone is found
-            return '24';
+            console.log(this.getName()+" has no zone");
+            return 24;
         }
     }
     //---------------------------Setters--------------------------
@@ -241,7 +242,7 @@ class HVAC extends door{
         this.room=a_room;//a "room" object
         this.x=parseInt(a_room.min_width)+10+"";
         this.y=parseInt(a_room.min_height)+30+"";
-        this.temp=this.room.getTemperature().toFixed(2);
+        this.temp=this.room.getTemperature();
         console.log("room temp: "+this.temp);
         this.status="OFF"; //hardcode right now, later on will be based on the HVAC controller 
         this.output=this.status+" || "+this.temp;//print ON/OFF status

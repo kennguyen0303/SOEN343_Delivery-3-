@@ -83,21 +83,25 @@ var heatingComponents = new Array();
 
 class HAVCController{
 
-    constructor(newZone){
+    constructor(newZone,outdoorTemp){
         this.zone = newZone;
         this.id = newZone.zoneID;
         this.state = HAVCStates.states.PAUSED;
+        this.outsideTemperature=outdoorTemp;
     }
 
     monitorTemperature(){
-        var outsideTemperature = document.getElementById('outsideTemp');
+        // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
+        // outsideTemperature=parseFloat(outsideTemperature);
+        var outsideTemperature=this.outsideTemperature;
+        console.log("Monitor temperature outside have: "+outsideTemperature);
         var tempSettings = (this.zone).getPeriodicTempSettings();
-        var idealTemperature = 24;
-        console.log(tempSettings);
+        var idealTemperature = 18;
+        //console.log(tempSettings);
 
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
-                console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
+                //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
                 var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() < varCurrentTime.getHours()) ;
                 if(isTime){
                     idealTemperature = tempSettings[i].getTempSetting();
@@ -107,7 +111,7 @@ class HAVCController{
 
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
-            console.log(rooms[i].getTemperature());
+            //console.log(rooms[i].getTemperature());
             var room = rooms[i];
 
             // check if windows have been closed since last temperature reading
@@ -125,7 +129,7 @@ class HAVCController{
 
                 if(this.state == HAVCStates.states.RUNNING){
                    var increase = (idealTemperature > temperatureInRoom);
-                   console.log(increase);
+                   //console.log(increase);
                    this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
@@ -135,7 +139,7 @@ class HAVCController{
             }
 
             this.monitorPipes(temperatureInRoom);
-            this.monitorWindows(temperatureInRoom, outsideTemperature);
+            this.monitorWindows(temperatureInRoom, outsideTemperature, room);
         }
         var heater = this;
         setTimeout(function(){heater.monitorTemperature()}, temperatureTimeout);
@@ -155,8 +159,8 @@ class HAVCController{
         }
     }
 
-    monitorWindows(temperatureInRoom, outsideTemperature){
-        if(temperatureInRoom > outsideTemperature){
+    monitorWindows(temperatureInRoom, outsideTemperature, room){
+        if(temperatureInRoom >= outsideTemperature){
             this.openWindowsInSummer(room);
         }
     }
@@ -184,7 +188,7 @@ class HAVCController{
          }
 
          if(isSummer){
-             if(document.getElementById('awayModeButton').innerHTML == 'OFF'){
+             if(shp_observer.getAwayMode() == 'OFF'){
                 this.state = HAVCStates.states.STOPPED;
                 room.openWindow(); // no parameters opens all windows in room
                 //shp_observer.getAwayMode() gonna replace line 184
@@ -193,11 +197,11 @@ class HAVCController{
      }
 
     updateRoomTemperature(increase, rate, room){
-        console.log(room);
         var currentTemp =  room.temperature;
-        console.log("temp");
        if(this.state != HAVCStates.states.PAUSED || currentTemp != outsideTemp){
-          room.temperature = increase ? (currentTemp + rate): (currentTemp - rate);
+          var tempPlus= Math.round((currentTemp + rate)*1e12)/1e12;
+          var tempMinus=Math.round((currentTemp - rate)*1e12)/1e12;
+          room.temperature = increase ? tempPlus: tempMinus;
        }
        for(var i=0;i<HVAC_array.length;i++){
         HVAC_array[i].update();
@@ -214,7 +218,7 @@ class SHH{
             this.zones.push(zone);
 
         // temperature monitoring
-        var heater = new HAVCController(zone);
+        var heater = new HAVCController(zone,outdoorTemp);
         heater.monitorTemperature();
         heatingComponents.push(heater);
         }
@@ -540,15 +544,16 @@ function postTemp(){
             //console.log(room.getDesiredTemperature());
             var consoleNode = document.createElement("p");
             roomsTempVals = room.getDesiredTemperature();
-
+            var alertText;
             if(room.isOverriden)
             {
                 alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
             }
-            else{
-            var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
+            else if(roomsTempVals.length>1){
+                 alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
             }
-            //console.log(room.isOverriden);
+            else alertText="No zone, no setting -> Desired temp for this room is: "+room.getDesiredTemperature()+" by standard";
+            //console.log(alertText);
             
             if (room.isOverriden)
             {
