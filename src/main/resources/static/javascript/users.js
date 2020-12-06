@@ -341,6 +341,9 @@ function writePermissions()
     document.getElementById("AllLights").innerHTML = "Can open all lights: " +  userPermissions.useAllLights;
     document.getElementById("RestrictedLights").innerHTML = "Can open lights if in the same room: " + userPermissions.useRestrictedLights;
     document.getElementById("SetAwayMode").innerHTML = "Can set the simulation to away mode: " + userPermissions.canSetAwayMode;
+    document.getElementById("SetZones").innerHTML = "Can define zones: " + userPermissions.canDefineZones;
+    document.getElementById("SetAllTemperatures").innerHTML = "Can override all temperatures: " + userPermissions.canOverrideAllTemperatures;
+    document.getElementById("SetRestrictedTemperature").innerHTML = "Can override temperature in the same room: " + userPermissions.canOverrideRestrictedTemperature;
 }
 
 function hidePermissions()
@@ -351,5 +354,8 @@ function hidePermissions()
    document.getElementById("AllLights").innerHTML = "";
    document.getElementById("RestrictedLights").innerHTML = "";
    document.getElementById("SetAwayMode").innerHTML = "";
+   document.getElementById("SetZones").innerHTML = "";
+   document.getElementById("SetAllTemperatures").innerHTML = "";
+   document.getElementById("SetRestrictedTemperature").innerHTML = "";
 
 }
