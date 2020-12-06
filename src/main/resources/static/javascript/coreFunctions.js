@@ -413,7 +413,6 @@ class SHC_Subject{
     }
     addObserver(obj){
         this.listOfObserver.push(obj);
-        console.log(this.listOfObserver);//for testing
     }
     removeObserver(obj){
         var index=this.listOfObserver.indexOf(obj);

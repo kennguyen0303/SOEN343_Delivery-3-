@@ -93,14 +93,11 @@ class HAVCController{
         // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
         // outsideTemperature=parseFloat(outsideTemperature);
         var outsideTemperature=this.outsideTemperature;
-        //console.log("Monitor temperature outside have: "+outsideTemperature);
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
-        // console.log(tempSettings);
 
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
-                //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
                 var timeHours = varCurrentTime.getHours();
                 var timeMinutes = varCurrentTime.getMinutes();
                 var timeHM;
@@ -115,17 +112,14 @@ class HAVCController{
 
                 //normal case
                 if (tempSettings[i].getStartTime() < tempSettings[i].getEndTime()) {
-                    console.log('normalcase');
                     isTime = (timeHM >= tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() > timeHM) ;
                 }
                 // all day long
                 else if (tempSettings[i].getStartTime() == tempSettings[i].getEndTime()) {
-                    console.log('alldaylong');
                     isTime = true;
                 }
                 //overnight case
                 else{
-                    console.log('overnight');
                     isTime = (timeHM >= tempSettings[i].getStartTime()) || (tempSettings[i].getEndTime() > timeHM) ;
                 }
                 if(isTime){
@@ -263,7 +257,7 @@ class SHH{
         this.outdoorTemp = outdoorTemp;
         this.zones = new Array();
         for (let i = 0; i < 6; i++) {
-            var zone = new Zone();
+            var zone = new Zone(i);
             //set the temperature defautly to 24
             var tempSetting = new PeriodicTempSetting(0, '00:00', '00:00', 24.0)
             zone.periodicTempSettings.push(tempSetting);
@@ -321,11 +315,6 @@ class SHH{
 
     addZone(newZone){
         this.zones.push(newZone);
-
-        // temperature monitoring
-        // var heater = new HAVCController(newZone);
-        // heater.startMonitoring();
-        // heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
@@ -375,20 +364,21 @@ function submitOutsideTemp(){
     }
 }
 
-// submit zones settings
-function submitZones(){
-
-    // set the options as stored data
+function displayZones(){
     for (let i = 0; i < shh.zones.length; i++) {
         const zone = shh.zones[i];
-        if (zone.getAllRooms() != null) {
+        if (zone.getAllRooms() != '') {
             for (let i = 0; i < zone.rooms.length; i++) {
                 const room = zone.rooms[i];
                 var tagID = room.getName() + 'Select';
-                document.getElementById(tagID).options[i].setAttribute('selected', true);
+                document.getElementById(tagID).options[zone.zoneID].setAttribute('selected', true);
             }
         }
     }
+}
+
+// submit zones settings
+function submitZones(){
 
     // collect all room-zone pairs
     var roomZones = new Array();
@@ -408,6 +398,7 @@ function submitZones(){
 
     //add selected rooms for each zone
     room_array.forEach(room => {
+        
         if (room.getName() == 'hallway') {
             shh.zones[roomZones['hallway']].addRoom(room);
         }
@@ -430,8 +421,6 @@ function submitZones(){
         }
     });
 
-    // TODO start monitor temperature under new settings
-
     // close zone modal
     $('#zoneModal').modal('hide');
 }
@@ -452,7 +441,7 @@ function showPeriodicTemps(){
 // submit temperature settings
 function submitTemps(){
 
-    // TODO set the zones of the SHH as required
+    // set the zones of the SHH as required
     for (let i = 1; i < shh.zones.length; i++) {
         var zone = shh.zones[i];
         var periods = new Array();

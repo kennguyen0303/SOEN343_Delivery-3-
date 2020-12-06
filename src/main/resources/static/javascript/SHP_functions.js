@@ -265,7 +265,7 @@ class SHP_Subject{
             an_observer.update(msg);//pass the message to the observer for update
             writeToFile("SHP sent to "+an_observer.getName()+": "+msg);
             //writeToSHCFile("SHC sent to "+an_observer.getName()+" "+msg);
-        });
+        });awayModeButton
     }
 }
 
