@@ -288,6 +288,11 @@ class SHP_observer{
     update(msg){
         console.log(this.name+" received message from SHP: "+msg);
         this.value=msg;//update the away mode value
+        try {
+            this.obj.setAwayMode(msg)//update SHH away mode status;
+        } catch (error) {
+            console.log("ERROR IN SHP OBSERVER: "+error);
+        }
     }
 
 }

@@ -83,9 +83,10 @@ var heatingComponents = new Array();
 
 class HAVCController{
 
-    constructor(newZone,outdoorTemp){
+    constructor(newZone,outdoorTemp,awaymode){
         this.zone = newZone;
         this.id = newZone.zoneID;
+        this.awayModeStatus=awaymode;//get the status from the SHH
         this.state = HAVCStates.states.PAUSED;
         this.outsideTemperature=outdoorTemp;
     }
@@ -207,10 +208,31 @@ class HAVCController{
         HVAC_array[i].update();
        }
     }
+    /**
+     * update the outdoor temperature from SHH
+     * @param {} val 
+     */
+    updateOutsideTemp(val){
+        this.outsideTemperature=val;
+    }
+    /**
+     * update the away mode status from the SHH
+     * @param {*} msg 
+     */
+    updateAwayModeStatus(msg){
+        this.awayModeStatus=msg;
+    }
+    /**
+     * return the away mode
+     */
+    getAwayModeStatus(){
+        return this.awayModeStatus;
+    }
 }
 
 class SHH{
     constructor(outdoorTemp){
+        this.awayMode="OFF";//assuming OFF initially
         this.outdoorTemp = outdoorTemp;
         this.zones = new Array();
         for (let i = 0; i < 6; i++) {
@@ -218,7 +240,7 @@ class SHH{
             this.zones.push(zone);
 
         // temperature monitoring
-        var heater = new HAVCController(zone,outdoorTemp);
+        var heater = new HAVCController(zone,outdoorTemp,this.awayMode);
         heater.monitorTemperature();
         heatingComponents.push(heater);
         }
@@ -228,11 +250,32 @@ class SHH{
     getOutdoorTemp(){
         return this.outdoorTemp;
     }
-
+    /**
+     * update the outdoor temp for this SHH and all the heaters
+     * @param {*} outdoorTemp 
+     */
     setOutdoorTemp(outdoorTemp){
         this.outdoorTemp = outdoorTemp;
+        try {
+            heatingComponents.forEach(heater => {
+                heater.updateOutsideTemp(outdoorTemp);
+                console.log("Updating outdoor for heater: "+outdoorTemp);
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
-
+    /**
+     * Update the away mode status when there is a change
+     * Also update the status for all heater components
+     * @param {*} msg 
+     */
+    setAwayMode(msg){
+        this.awayMode=msg;
+        heatingComponents.forEach(heater => {
+            
+        });
+    }
     getAllZones(){
         return zones;
     }
