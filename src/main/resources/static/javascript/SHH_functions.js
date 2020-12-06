@@ -190,17 +190,22 @@ function submitZones(){
         if (room.getName() == 'hallway') {
             shh.zones[roomZones['hallway']].addRoom(room);
         }
-        if (room.getName() == 'garage') {
+        else if (room.getName() == 'garage') {
             shh.zones[roomZones['garage']].addRoom(room);
         }
-        if (room.getName() == 'kitchen') {
+        else if (room.getName() == 'kitchen') {
             shh.zones[roomZones['kitchen']].addRoom(room);
         }
-        if (room.getName() == 'bedroom') {
+        else if (room.getName() == 'bedroom') {
             shh.zones[roomZones['bedroom']].addRoom(room);
         }
-        if (room.getName() == 'bathroom') {
+        else if (room.getName() == 'bathroom') {
             shh.zones[roomZones['bathroom']].addRoom(room);
+        }
+        // no zone is set for this room
+        // put it into the zone[0]
+        else if(room.getName() != 'backyard'){  // backyard is outdoor
+            shh.zones[0].addRoom(room);
         }
     });
 
@@ -386,8 +391,10 @@ function loadRoomsDropdown()
 
 function postTemp(){
     var roomCheck = document.getElementById('roomName').value;
-    var i=0;
+    // var i=0;
     room_array.forEach(room => {
+        console.log('room_array check: ' + room.getName() + '  <==>  ' + roomCheck);
+        console.log(room.getName() == roomCheck);
 
         if (room.getName() == roomCheck) {
             //console.log(room.getDesiredTemperature());
@@ -400,22 +407,35 @@ function postTemp(){
             }
             else{
                 var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is ";
+                
+                // check if the room is in the zones[0]
+                shh.zones[0].rooms.forEach(roomOfZone0 => {
+                    console.log(roomOfZone0.getName() + '  <==>  ' + roomCheck);
+                    console.log(roomOfZone0.getName() == roomCheck);
+                    if (roomOfZone0.getName() == roomCheck) {
+                        alertText += "24."
+                        console.log(alertText);
+                    }
+                    else{
+                        if(typeof roomsTempVals[0] == 'undefined')
+                        {}else
+                        {
+                            alertText += roomsTempVals[0].getTempSetting() + " ";
+                        }
+                        if(typeof roomsTempVals[1] == 'undefined')
+                        {}else
+                        {
+                            alertText += roomsTempVals[1].getTempSetting() + " ";
+                        }
+                        if(typeof roomsTempVals[2] == 'undefined')
+                        {}else
+                        {
+                            alertText += roomsTempVals[2].getTempSetting() + " ";
+                        }
+                    }
+                });
                
-                if(typeof roomsTempVals[0] == 'undefined')
-                {}else
-                {
-                    alertText += roomsTempVals[0].getTempSetting() + " ";
-                }
-                if(typeof roomsTempVals[1] == 'undefined')
-                {}else
-                {
-                    alertText += roomsTempVals[1].getTempSetting() + " ";
-                }
-                if(typeof roomsTempVals[2] == 'undefined')
-                {}else
-                {
-                    alertText += roomsTempVals[2].getTempSetting() + " ";
-                }
+
             }
             //console.log(room.isOverriden);
             
@@ -427,7 +447,7 @@ function postTemp(){
             consoleNode.appendChild(consoleText);
             document.getElementById("outputConsole").appendChild(consoleNode);
         }
-        i++;
+        // i++;
     });
     
 }
