@@ -92,7 +92,7 @@ class HAVCController{
     }
 
     monitorTemperature(){
-        //console.log(this);
+        console.log(this);
         var outsideTemperature = document.getElementById('outsideTemp');
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 0;
@@ -137,7 +137,7 @@ class HAVCController{
             monitorWindows(temperatureInRoom, outsideTemperature);
         }
 
-        setTimeout(this.monitorTemperature, temperatureTimeout);
+        setTimeout(function(){this.monitorTemperature}, temperatureTimeout);
     }
 
 
@@ -208,7 +208,7 @@ class SHH{
 
         // temperature monitoring
         var heater = new HAVCController(zone);
-        heater.startMonitoring();
+        heater.monitorTemperature();
         heatingComponents.push(heater);
         }
         //zones[0] is for unset rooms
