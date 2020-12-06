@@ -207,6 +207,7 @@ class HAVCController{
           room.temperature = increase ? tempPlus: tempMinus;
        }
        for(var i=0;i<HVAC_array.length;i++){
+        HVAC_array[i].updateStatus(this);
         HVAC_array[i].update();
        }
     }
