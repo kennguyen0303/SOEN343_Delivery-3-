@@ -97,7 +97,7 @@ function room(){
                 }
             }
             //no corresponding zone is found
-            return ' outer 24';
+            return '24';
         }
     }
     //---------------------------Setters--------------------------
