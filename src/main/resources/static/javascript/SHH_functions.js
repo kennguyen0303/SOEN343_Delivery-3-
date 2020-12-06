@@ -25,10 +25,6 @@ class Zone{
             this.rooms.splice(0, 1)
         }
     }
-
-    getRooms(){
-        return this.rooms;
-    }
 }
 
 class PeriodicTempSetting {
