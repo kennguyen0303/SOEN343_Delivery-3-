@@ -19,13 +19,21 @@ class HAVCController{
     }
 
     monitorTemperature(){
-        var outsideTemperature = SHH.outdoorTemp; //TODO: Get outside temperature
+        var outsideTemperature = shh.outdoorTemp; //TODO: Get outside temperature
 
         // TODO: Get ideal temperature in a zone
-        var idealTemperature = this.zone.getPeriodicTempSettings();
-
+        var tempSettings = this.zone.getPeriodicTempSettings();
+        var idealTemperature = 0;
         // TODO: check if the idealTemp has stored something
         // TODO: extract information of different periods
+        if(tempSettings != null){
+            for(let i = 0; i<tempSettings.length; i++){
+                var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && tempSettings[i].getEndTime() < varCurrentTime.getHours())) ;
+                if(isTime){
+                    idealTemperature = tempSettings[i].getTempSetting();
+                }
+            }
+        }
 
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
@@ -58,7 +66,7 @@ class HAVCController{
             monitorWindows(temperatureInRoom, outsideTemperature);
         }
 
-        setTimeout(this.monitorTemperature(), temperatureTimeout);
+        setTimeout(this.monitorTemperature, temperatureTimeout);
     }
 
 
@@ -83,7 +91,7 @@ class HAVCController{
 
     monitorWindows(temperatureInRoom, outsideTemperature){
         if(temperatureInRoom > outsideTemperature){
-            openWindowsInSummer(room);
+            //openWindowsInSummer(room);
         }
     }
 
