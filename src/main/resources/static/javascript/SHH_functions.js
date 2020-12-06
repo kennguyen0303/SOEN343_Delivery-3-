@@ -70,13 +70,12 @@ class PeriodicTempSetting {
     }
 }
 
-//  NEWLY ADDED
-// enum for HAVC States
+// Temperature Monitoring
 class HAVCStates{
     static states = {
       PAUSED: 'paused',
       RUNNING: 'running',
-      STOPPED: 'stopped' // might be redundant
+      STOPPED: 'stopped'
     }
 }
 
@@ -86,19 +85,19 @@ class HAVCController{
 
     constructor(newZone){
         this.zone = newZone;
-        //console.log(this.zone);
         this.id = newZone.zoneID;
         this.state = HAVCStates.states.PAUSED;
     }
 
     monitorTemperature(){
-        console.log(this);
         var outsideTemperature = document.getElementById('outsideTemp');
         var tempSettings = (this.zone).getPeriodicTempSettings();
-        var idealTemperature = 0;
+        var idealTemperature = 24;
+        console.log(tempSettings);
 
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
+                console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
                 var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() < varCurrentTime.getHours()) ;
                 if(isTime){
                     idealTemperature = tempSettings[i].getTempSetting();
@@ -108,42 +107,38 @@ class HAVCController{
 
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
+            console.log(rooms[i].getTemperature());
+            var room = rooms[i];
 
             // check if windows have been closed since last temperature reading
             if(this.state == HAVCStates.states.STOPPED){
                  var index = rooms[i].window_index_array();
-                 if( window_index_array[index].status == 'closed'){ // TODO: VERIFY THAT THIS IS ACCURATE. Do we only have 1 window per room?
+                 if( window_index_array[index].status == 'closed'){
                     this.state = HAVCStates.states.RUNNING;
                  }
             }
 
             // adjust temperature if the simulation is not stopped
-            if(!this.state == HAVCStates.states.STOPPED){
+            if(this.state != HAVCStates.states.STOPPED){
                 var temperatureInRoom = rooms[i].getTemperature();
-                var increase;
-                setHAVCState(idealTemperature, temperatureInRoom);
+                this.setHAVCState(idealTemperature, temperatureInRoom);
 
                 if(this.state == HAVCStates.states.RUNNING){
-                   increase = (idealTemperature > temperatureInRoom);
+                   var increase = (idealTemperature > temperatureInRoom);
+                   console.log(increase);
                    this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
-                    increase = (outsideTemperature > temperatureInRoom);
+                    var increase = (outsideTemperature > temperatureInRoom);
                     this.updateRoomTemperature(increase, 0.05, room);
                 }
             }
 
-            monitorPipes(temperatureInRoom);
-            monitorWindows(temperatureInRoom, outsideTemperature);
+            this.monitorPipes(temperatureInRoom);
+            this.monitorWindows(temperatureInRoom, outsideTemperature);
         }
-
-        setTimeout(function(){this.monitorTemperature}, temperatureTimeout);
-    }
-
-
-    startMonitoring(){
-        console.log(this);
-        this.monitorTemperature();
+        var heater = this;
+        setTimeout(function(){heater.monitorTemperature()}, temperatureTimeout);
     }
 
     monitorPipes(temperatureInRoom){
@@ -162,7 +157,7 @@ class HAVCController{
 
     monitorWindows(temperatureInRoom, outsideTemperature){
         if(temperatureInRoom > outsideTemperature){
-            //openWindowsInSummer(room);
+            this.openWindowsInSummer(room);
         }
     }
 
@@ -180,8 +175,15 @@ class HAVCController{
     }
 
     openWindowsInSummer(room){
-         var currentSeason = getCurrentSeason();
-         if(currentSeason == Seasons.season.SUMMER){
+         var seasonNum = varCurrentTime.getMonth();
+         var isSummer = false;
+         for(let i=0; i < summer_month.length ; i++){
+            if(seasonNum == summer_month[i]){
+                isSummer = true;
+            }
+         }
+
+         if(isSummer){
              if(document.getElementById('awayModeButton').innerHTML == 'OFF'){
                 this.state = HAVCStates.states.STOPPED;
                 room.openWindow(); // no parameters opens all windows in room
@@ -190,10 +192,14 @@ class HAVCController{
      }
 
     updateRoomTemperature(increase, rate, room){
-        var currentTemp =  room.getTemperature();
-
-       if(!this.state == HAVCStates.states.PAUSED || !currentTemp == outsideTemp){
+        console.log(room);
+        var currentTemp =  room.temperature;
+        console.log("temp");
+       if(this.state != HAVCStates.states.PAUSED || currentTemp != outsideTemp){
           room.temperature = increase ? (currentTemp + rate): (currentTemp - rate);
+       }
+       for(var i=0;i<HVAC_array.length;i++){
+        HVAC_array[i].update();
        }
     }
 }
