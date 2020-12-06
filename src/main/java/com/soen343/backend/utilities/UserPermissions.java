@@ -31,6 +31,16 @@ public class UserPermissions {
     @JsonProperty("canSetAwayMode")
     private boolean canSetAwayMode;
 
+    @JsonProperty("canDefineZones")
+    private boolean canDefineZones;
+
+    @JsonProperty("canOverrideAllTemperatures")
+    private boolean canOverrideAllTemperatures;
+
+
+    @JsonProperty("canOverrideRestrictedTemperature")
+    private boolean canOverrideRestrictedTemperature;
+
     /**
      * Constructor to initialize user permissions to default
      */
@@ -41,24 +51,45 @@ public class UserPermissions {
         canOpenRestrictedWindow = false;
         canUseRestrictedLights = false;
         canSetAwayMode = false;
+        canDefineZones = false;
+        canOverrideAllTemperatures = false;
+        canOverrideRestrictedTemperature = false;
     }
 
-    /**
-     * Constructor for specific user permission settings
-     * @param canOpenAllWindows
-     * @param canLockDoors
-     * @param canUseLights
-     * @param canOpenRestrictedWindow
-     * @param canUseRestrictedLights
-     * @param canSetAwayMode
-     */
-    public UserPermissions(boolean canOpenAllWindows, boolean canLockDoors, boolean canUseLights, boolean canOpenRestrictedWindow, boolean canUseRestrictedLights, boolean canSetAwayMode) {
-        this.canOpenAllWindows = canOpenAllWindows;
-        this.canLockDoors = canLockDoors;
-        this.canUseLights = canUseLights;
-        this.canOpenRestrictedWindow = canOpenRestrictedWindow;
-        this.canUseRestrictedLights = canUseRestrictedLights;
-        this.canSetAwayMode = canSetAwayMode;
+    public void setAsChild(){
+        this.canOpenAllWindows = false;
+        this.canLockDoors = false;
+        this.canUseLights = false;
+        this.canOpenRestrictedWindow = true;
+        this.canUseRestrictedLights = true;
+        this.canSetAwayMode = false;
+        this.canDefineZones = false;
+        this.canOverrideAllTemperatures = false;
+        this.canOverrideRestrictedTemperature = false;
+    }
+
+    public void setAsParent(){
+        this.canOpenAllWindows = true;
+        this.canLockDoors = true;
+        this.canUseLights = true;
+        this.canOpenRestrictedWindow = true;
+        this.canUseRestrictedLights = true;
+        this.canSetAwayMode = true;
+        this.canDefineZones = true;
+        this.canOverrideAllTemperatures = true;
+        this.canOverrideRestrictedTemperature = true;
+    }
+
+    public void setAsGuest(){
+        this.canOpenAllWindows = false;
+        this.canLockDoors = false;
+        this.canUseLights = false;
+        this.canOpenRestrictedWindow = true;
+        this.canUseRestrictedLights = true;
+        this.canSetAwayMode = false;
+        this.canDefineZones = false;
+        this.canOverrideAllTemperatures = false;
+        this.canOverrideRestrictedTemperature = true;
     }
 
     /**
@@ -149,4 +180,27 @@ public class UserPermissions {
         this.canSetAwayMode = canSetAwayMode;
     }
 
+    public boolean getCanOverrideRestrictedTemperature() {
+        return canOverrideRestrictedTemperature;
+    }
+
+    public void setCanOverrideRestrictedTemperature(boolean canOverrideRestrictedTemperature) {
+        this.canOverrideRestrictedTemperature = canOverrideRestrictedTemperature;
+    }
+
+    public boolean getCanOverrideAllTemperatures() {
+        return canOverrideAllTemperatures;
+    }
+
+    public void setCanOverrideAllTemperatures(boolean canOverrideAllTemperatures) {
+        this.canOverrideAllTemperatures = canOverrideAllTemperatures;
+    }
+
+    public boolean getCanDefineZones() {
+        return canDefineZones;
+    }
+
+    public void setCanDefineZones(boolean canDefineZones){
+        this.canDefineZones =  canDefineZones;
+    }
 }

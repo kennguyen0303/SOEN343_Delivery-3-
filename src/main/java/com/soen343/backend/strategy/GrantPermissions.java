@@ -34,6 +34,16 @@ public class GrantPermissions implements PermissionsBehaviour {
         else if(permission.equalsIgnoreCase("restrictedLights")){
             userPermissions.setCanUseRestrictedLights(value);
         }
+        else if(permission.equalsIgnoreCase("defineZones")){
+            userPermissions.setCanDefineZones(value);
+        }
+        else if(permission.equalsIgnoreCase("restrictedTemperature")){
+            userPermissions.setCanOverrideRestrictedTemperature(value);
+        }
+        else if(permission.equalsIgnoreCase("allTemperature")){
+            userPermissions.setCanOverrideAllTemperatures(value);
+        }
+
         return true;
     }
 }

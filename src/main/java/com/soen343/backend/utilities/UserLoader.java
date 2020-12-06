@@ -31,7 +31,21 @@ public class UserLoader {
                 boolean openLights= Boolean.parseBoolean(reader.readLine());
                 boolean openRestrictedLights= Boolean.parseBoolean(reader.readLine());
                 boolean canSetAwayMode = Boolean.parseBoolean(reader.readLine());
-                UserPermissions userPermissions = new UserPermissions(openAllWindows, lockDoors, openLights, openRestrictedWindow, openRestrictedLights, canSetAwayMode);
+                boolean canDefineZones = Boolean.parseBoolean(reader.readLine());
+                boolean canOverrideAllTemperatures =  Boolean.parseBoolean(reader.readLine());
+                boolean canOverrideRestrictedTemperature = Boolean.parseBoolean(reader.readLine());
+
+                // initialize user permissions object
+                UserPermissions userPermissions = new UserPermissions();
+                userPermissions.setCanUseRestrictedLights(openRestrictedLights);
+                userPermissions.setCanUseLights(openLights);
+                userPermissions.setCanLockDoors(lockDoors);
+                userPermissions.setCanOpenAllWindows(openAllWindows);
+                userPermissions.setCanOpenRestrictedWindow(openRestrictedWindow);
+                userPermissions.setCanSetAwayMode(canSetAwayMode);
+                userPermissions.setCanDefineZones(canDefineZones);
+                userPermissions.setCanOverrideAllTemperatures(canOverrideAllTemperatures);
+                userPermissions.setCanOverrideRestrictedTemperature(canOverrideRestrictedTemperature);
 
                 // Create user
                 User user =  userFactory.getUser(id, role);
