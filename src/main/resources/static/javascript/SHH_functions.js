@@ -397,7 +397,7 @@ function loadRoomsDropdown()
 function postTemp(){
     var roomCheck = document.getElementById('roomName').value;
     var tempText = ' ';
-    var timeText = document.getElementById('time').innerHTML;
+    var timeText = varCurrentTime;
     // find which zone and room this roomName belongs to
     var whichRoom;
     var whichZone;
@@ -407,8 +407,6 @@ function postTemp(){
                 if (room.getName() == roomCheck) {
                     whichZone = zone;
                     whichRoom = room;
-                    console.log(zone);
-                    console.log(room);
                 }
             });
         }
@@ -417,36 +415,39 @@ function postTemp(){
     // if the desiredTemp is overriden
     if (whichRoom.isOverriden) {
         // display the desiredTemp stored in the room
-        tempText = whichRoom.getDesiredTemperature() + '\u2103 (OVERRIDEN)';
+        tempText = whichRoom.getDesiredTemperature() + ' (OVERRIDEN)';
     }
 
     // if the room is not overriden
     else{
         // the zone is not set, so defaultly set to 24
         if (whichZone.zoneID == '0') {
-            tempText += '24\u2103'
+            tempText += '24'
         }
         // the zone is set by the user's inputs
         else{
-            console.log(tempText);
             if(typeof whichZone.getPeriodicTempSettings()[0] != 'undefined'){
-                tempText += '(period 1<=>' + whichZone.getPeriodicTempSettings()[0].getTempSetting() + "\u2103) ";
+                tempText += '(period 1<=>' + whichZone.getPeriodicTempSettings()[0].getTempSetting() + ") ";
             }
             if(typeof whichZone.getPeriodicTempSettings()[1] != 'undefined'){
-                tempText += '(period 2<=>' +  whichZone.getPeriodicTempSettings()[1].getTempSetting() + "\u2103) ";
+                tempText += '(period 2<=>' +  whichZone.getPeriodicTempSettings()[1].getTempSetting() + ") ";
             }
             if(typeof whichZone.getPeriodicTempSettings()[2] != 'undefined'){
-                tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + "\u2103) ";
+                tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + ") ";
             }
         }
     }
 
     //generate the output string
     var outputText = timeText + ": The temperature in the " + roomCheck + " is: " + tempText;
+    console.log(typeof outputText);
+    var outputString = new String();
+    outputString = outputText.toString();
     var consoleText = document.createTextNode(outputText);
     var consoleNode = document.createElement("p");
     consoleNode.appendChild(consoleText);
     document.getElementById("outputConsole").appendChild(consoleNode);
+    writeToSHHFile(outputText);
 }
 
 function updateTemp(){
@@ -493,4 +494,19 @@ function changeDesired(season)
         desiredSummerTemp = desired;
         document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
     }
+}
+
+//This method will write msg to a give log file
+function writeToSHHFile(msg){
+
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert('Log information has been saved to the SHP_command.txt');
+        }
+    }
+
+    xhttp.open('POST', 'http://localhost:8080/api/user/shhWirter/' + msg, true);
+    xhttp.send();
 }
