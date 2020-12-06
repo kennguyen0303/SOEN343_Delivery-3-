@@ -151,10 +151,13 @@ class HAVCController{
             // adjust temperature if the simulation is not stopped
             if(this.state != HAVCStates.states.STOPPED){
                 var temperatureInRoom = rooms[i].getTemperature();
-                this.setHAVCState(idealTemperature, temperatureInRoom);
+                 var tempToUse = room.isOverriden ? room.desiredTemperature : idealTemperature;
+
+                var temperatureInRoom = rooms[i].getTemperature();
+                this.setHAVCState(tempToUse, temperatureInRoom);
 
                 if(this.state == HAVCStates.states.RUNNING){
-                   var increase = (idealTemperature > temperatureInRoom);
+                   var increase = (tempToUse > temperatureInRoom);
                    this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
