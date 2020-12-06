@@ -184,6 +184,7 @@ class HAVCController{
              if(document.getElementById('awayModeButton').innerHTML == 'OFF'){
                 this.state = HAVCStates.states.STOPPED;
                 room.openWindow(); // no parameters opens all windows in room
+                //shp_observer.getAwayMode() gonna replace line 184
              }
          }
      }
@@ -266,11 +267,13 @@ class SHH{
     }
 
 }
-//------ALEX---------CONFLICT-START
+//-----DEFINING OBJECTS------------
 var shh = new SHH('15.5');
 var shc_observer=new SHC_observer(shh);
 var shc_Subject = new SHC_Subject();
 shc_Subject.addObserver(shc_observer);//add the observer
+var shp_observer=new SHP_observer(shh);
+var shp_Subject = new SHP_Subject();
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){
