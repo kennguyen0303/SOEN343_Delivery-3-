@@ -376,7 +376,9 @@ function loadRoomsDropdown()
                 for (var key2 of Object.keys(myObj[key1])){
                     if(key2=="name"){
                         var roomName = myObj[key1][key2][0].toString()
-                        htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
+                        if (roomName != 'backyard') {
+                            htmlText += "<option value=" + roomName + ">" + roomName + "</option>" ;
+                        }
                     }
                 }
             }
