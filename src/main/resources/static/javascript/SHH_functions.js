@@ -90,13 +90,11 @@ class HAVCController{
     }
 
     monitorTemperature(){
-        // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
-        // outsideTemperature=parseFloat(outsideTemperature);
+
         var outsideTemperature=this.outsideTemperature;
-        //console.log("Monitor temperature outside have: "+outsideTemperature);
+
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
-        // console.log(tempSettings);
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
@@ -114,17 +112,14 @@ class HAVCController{
 
                 //normal case
                 if (tempSettings[i].getStartTime() < tempSettings[i].getEndTime()) {
-                    console.log('normalcase');
                     isTime = (timeHM >= tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() > timeHM) ;
                 }
                 // all day long
                 else if (tempSettings[i].getStartTime() == tempSettings[i].getEndTime()) {
-                    //console.log('alldaylong');
                     isTime = true;
                 }
                 //overnight case
                 else{
-                    //console.log('overnight');
                     isTime = (timeHM >= tempSettings[i].getStartTime()) || (tempSettings[i].getEndTime() > timeHM) ;
                 }
                 if(isTime){
@@ -132,6 +127,17 @@ class HAVCController{
                 }
             }
         }
+        
+        if(this.getAwayModeStatus() == 'ON'){
+            if(this.getIsSummer()){
+                console.log("summer");
+                idealTemperature = desiredSummerTemp;
+            }
+            else if(this.getIsWinter()){
+                console.log("winter");
+                idealTemperature = desiredWinterTemp;
+            }
+         }
 
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
@@ -206,15 +212,7 @@ class HAVCController{
     }
 
     openWindowsInSummer(room){
-         var seasonNum = varCurrentTime.getMonth();
-         var isSummer = false;
-         for(let i=0; i < summer_month.length; i++){
-            if(seasonNum == summer_month[i]){
-                isSummer = true;
-            }
-         }
-
-         if(isSummer){
+         if(this.getIsSummer()){
              if(this.getAwayModeStatus() == 'OFF'){
                   var indexes = room.window_index_array;
                   var index = indexes[0];
@@ -257,6 +255,28 @@ class HAVCController{
      */
     getAwayModeStatus(){
         return this.awayModeStatus;
+    }
+
+    getIsSummer(){
+        var seasonNum = varCurrentTime.getMonth() + 1;
+        var isSummer = false;
+        for(let i=0; i < summer_month.length; i++){
+            if(seasonNum == summer_month[i]){
+               isSummer = true;
+                }
+        }
+        return isSummer;
+    }
+
+    getIsWinter(){
+      var seasonNum = varCurrentTime.getMonth() + 1;
+      var isWinter = false;
+      for(let i=0; i < winter_month.length; i++){
+        if(seasonNum == winter_month[i]){
+           isWinter = true;
+        }
+      }
+        return isWinter;
     }
 }
 
