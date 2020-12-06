@@ -241,8 +241,10 @@ class HVAC extends door{
         this.room=a_room;//a "room" object
         this.x=parseInt(a_room.min_width)+10+"";
         this.y=parseInt(a_room.min_height)+30+"";
+        this.temp=this.room.getTemperature().toFixed(2);
+        console.log("room temp: "+this.temp);
         this.status="OFF"; //hardcode right now, later on will be based on the HVAC controller 
-        this.output=this.status+" || "+this.room.getTemperature();//print ON/OFF status
+        this.output=this.status+" || "+this.temp;//print ON/OFF status
     }
     // update(){
     //     //display the text
