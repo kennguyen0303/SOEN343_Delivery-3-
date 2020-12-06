@@ -128,7 +128,7 @@ class HAVCController{
                 }
             }
         }
-        
+
         if(this.getAwayModeStatus() == 'ON'){
             if(this.getIsSummer()){
                 console.log("summer");
@@ -180,7 +180,7 @@ class HAVCController{
     }
 
     monitorPipes(temperatureInRoom){
-        if(temperatureInRoom == 0){
+        if(temperatureInRoom <= 0){
             // output to console
             var consoleNode = document.createElement("p");
             var text = "Caution! Temperature below zero. Pipes may burst."
