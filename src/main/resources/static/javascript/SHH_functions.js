@@ -73,7 +73,10 @@ class SHH{
         this.outdoorTemp = outdoorTemp;
         this.zones = new Array();
         for (let i = 0; i < 6; i++) {
-            var zone = new Zone(i);
+            var zone = new Zone();
+            //set the temperature defautly to 24
+            var tempSetting = new PeriodicTempSetting(0, '00:00', '00:00', 24.0)
+            zone.periodicTempSettings.push(tempSetting);
             this.zones.push(zone);
         }
         //zones[0] is for unset rooms
@@ -391,65 +394,57 @@ function loadRoomsDropdown()
 
 function postTemp(){
     var roomCheck = document.getElementById('roomName').value;
-    // var i=0;
-    room_array.forEach(room => {
-        console.log('room_array check: ' + room.getName() + '  <==>  ' + roomCheck);
-        console.log(room.getName() == roomCheck);
-
-        if (room.getName() == roomCheck) {
-            //console.log(room.getDesiredTemperature());
-            var consoleNode = document.createElement("p");
-            roomsTempVals = room.getDesiredTemperature();
-
-            if(room.isOverriden)
-            {
-                alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
-            }
-            else{
-                var alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is ";
-                
-                // check if the room is in the zones[0]
-                shh.zones[0].rooms.forEach(roomOfZone0 => {
-                    console.log(roomOfZone0.getName() + '  <==>  ' + roomCheck);
-                    console.log(roomOfZone0.getName() == roomCheck);
-                    if (roomOfZone0.getName() == roomCheck) {
-                        alertText += "24."
-                        console.log(alertText);
-                    }
-                    else{
-                        if(typeof roomsTempVals[0] == 'undefined')
-                        {}else
-                        {
-                            alertText += roomsTempVals[0].getTempSetting() + " ";
-                        }
-                        if(typeof roomsTempVals[1] == 'undefined')
-                        {}else
-                        {
-                            alertText += roomsTempVals[1].getTempSetting() + " ";
-                        }
-                        if(typeof roomsTempVals[2] == 'undefined')
-                        {}else
-                        {
-                            alertText += roomsTempVals[2].getTempSetting() + " ";
-                        }
-                    }
-                });
-               
-
-            }
-            //console.log(room.isOverriden);
-            
-            if (room.isOverriden)
-            {
-                alertText += " OVERRIDDEN";
-            }           
-            var consoleText = document.createTextNode(alertText);
-            consoleNode.appendChild(consoleText);
-            document.getElementById("outputConsole").appendChild(consoleNode);
+    var tempText = ' ';
+    var timeText = document.getElementById('time').innerHTML;
+    // find which zone and room this roomName belongs to
+    var whichRoom;
+    var whichZone;
+    shh.zones.forEach(zone => {
+        if (zone.rooms.length > 0) {
+            zone.rooms.forEach(room => {
+                if (room.getName() == roomCheck) {
+                    whichZone = zone;
+                    whichRoom = room;
+                    console.log(zone);
+                    console.log(room);
+                }
+            });
         }
-        // i++;
     });
-    
+
+    // if the desiredTemp is overriden
+    if (whichRoom.isOverriden) {
+        // display the desiredTemp stored in the room
+        tempText = whichRoom.getDesiredTemperature() + '\u2103 (OVERRIDEN)';
+    }
+
+    // if the room is not overriden
+    else{
+        // the zone is not set, so defaultly set to 24
+        if (whichZone.zoneID == '0') {
+            tempText += '24\u2103'
+        }
+        // the zone is set by the user's inputs
+        else{
+            console.log(tempText);
+            if(typeof whichZone.getPeriodicTempSettings()[0] != 'undefined'){
+                tempText += '(period 1<=>' + whichZone.getPeriodicTempSettings()[0].getTempSetting() + "\u2103) ";
+            }
+            if(typeof whichZone.getPeriodicTempSettings()[1] != 'undefined'){
+                tempText += '(period 2<=>' +  whichZone.getPeriodicTempSettings()[1].getTempSetting() + "\u2103) ";
+            }
+            if(typeof whichZone.getPeriodicTempSettings()[2] != 'undefined'){
+                tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + "\u2103) ";
+            }
+        }
+    }
+
+    //generate the output string
+    var outputText = timeText + ": The temperature in the " + roomCheck + " is: " + tempText;
+    var consoleText = document.createTextNode(outputText);
+    var consoleNode = document.createElement("p");
+    consoleNode.appendChild(consoleText);
+    document.getElementById("outputConsole").appendChild(consoleNode);
 }
 
 function updateTemp(){
