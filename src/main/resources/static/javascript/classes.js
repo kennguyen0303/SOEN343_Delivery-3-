@@ -58,7 +58,7 @@ function room(){
     this.window_index_array=[];// array of index corresponding to the global array "window_array"
     this.light_index_array=[];// array of index corresponding to the global array "light_array"
     this.occupant=[];//array of indexes of user_array
-    this.temperature = 15.5;//temperature of the room
+    this.temperature = outsideTempGlobal;//temperature of the room
     this.desiredTemperature;
     this.isOverriden = false;
     //methods 
@@ -108,7 +108,6 @@ function room(){
     }
     this.setTemperature=(temperature)=>{
         this.temperature=temperature;
-        console.log("setTemperature() works");
     }
     this.setDesiredTemperature=(temperature)=>{
         this.desiredTemperature=temperature;

@@ -92,15 +92,9 @@ class HAVCController{
     monitorTemperature(){
 
         var outsideTemperature=this.outsideTemperature;
-<<<<<<< HEAD
-        var tempSettings = (this.zone).getPeriodicTempSettings();
-        var idealTemperature = 18;
-
-=======
 
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
->>>>>>> 43d4512ff54200a9932cd98af6901a27d2a9390c
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 var timeHours = varCurrentTime.getHours();
@@ -380,7 +374,7 @@ shc_Subject.addObserver(shc_observer);//add the observer
 var shp_observer=new SHP_observer(shh);
 var shp_Subject = new SHP_Subject();
 shp_Subject.addObserver(shp_observer);//add the observer
-
+var outsideTempGlobal=ssh.getOutdoorTemp();
 // set the outside temperature according to user's input
 function submitOutsideTemp(){
     var outsideTemp = prompt('Please enter the value for outside temperature:');
@@ -396,6 +390,14 @@ function submitOutsideTemp(){
     else{
         shh.setOutdoorTemp(outsideTemp);
         tempElement.innerHTML = outsideTemp;
+        //quick fix last minute
+        room_array.forEach(element => {
+            element.setTemperature(outsideTemp);
+        });
+        HVAC_array.forEach(heater => {
+            console.log(heater);
+            heater.update();
+        });
         alert("The outside temperature has been updated successfully.");
     }
 }
