@@ -92,9 +92,10 @@ class HAVCController{
     monitorTemperature(){
 
         var outsideTemperature=this.outsideTemperature;
-
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
+
+
         if(tempSettings != null){
             for(let i = 0; i<tempSettings.length; i++){
                 var timeHours = varCurrentTime.getHours();
