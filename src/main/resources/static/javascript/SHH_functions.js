@@ -95,7 +95,7 @@ class HAVCController{
         // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
         // outsideTemperature=parseFloat(outsideTemperature);
         var outsideTemperature=this.outsideTemperature;
-        console.log("Monitor temperature outside have: "+outsideTemperature);
+        //console.log("Monitor temperature outside have: "+outsideTemperature);
         var tempSettings = (this.zone).getPeriodicTempSettings();
         var idealTemperature = 18;
         //console.log(tempSettings);
@@ -112,13 +112,14 @@ class HAVCController{
 
         var rooms = this.zone.getAllRooms();
         for(let i = 0; i< rooms.length; i++){
-            //console.log(rooms[i].getTemperature());
             var room = rooms[i];
 
+            // functionality removed we should not reach this case
             // check if windows have been closed since last temperature reading
             if(this.state == HAVCStates.states.STOPPED){
-                 var index = rooms[i].window_index_array();
-                 if( window_index_array[index].status == 'closed'){
+                 var indexes = rooms[i].window_index_array;
+                 var index = indexes[0];
+                 if(window_array[index]!= null && window_array[index].status == 'closed'){
                     this.state = HAVCStates.states.RUNNING;
                  }
             }
@@ -130,7 +131,6 @@ class HAVCController{
 
                 if(this.state == HAVCStates.states.RUNNING){
                    var increase = (idealTemperature > temperatureInRoom);
-                   //console.log(increase);
                    this.updateRoomTemperature(increase, 0.1, room);
                 }
                 else if(this.state == HAVCStates.states.PAUSED){
@@ -182,17 +182,19 @@ class HAVCController{
     openWindowsInSummer(room){
          var seasonNum = varCurrentTime.getMonth();
          var isSummer = false;
-         for(let i=0; i < summer_month.length ; i++){
+         for(let i=0; i < summer_month.length; i++){
             if(seasonNum == summer_month[i]){
                 isSummer = true;
             }
          }
 
          if(isSummer){
-             if(shp_observer.getAwayMode() == 'OFF'){
-                this.state = HAVCStates.states.STOPPED;
-                room.openWindow(); // no parameters opens all windows in room
-                //shp_observer.getAwayMode() gonna replace line 184
+             if(this.getAwayModeStatus() == 'OFF'){
+                  var indexes = room.window_index_array;
+                  var index = indexes[0];
+                  if(window_array[index]!= null && window_array[index].status != 'open'){
+                      room.openWindow();
+                  }
              }
          }
      }
