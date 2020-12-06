@@ -176,6 +176,7 @@ function setAwayMode(){
           
             if (document.getElementById('awayModeButton').innerHTML == 'ON') {
                 document.getElementById('awayModeButton').innerHTML = 'OFF';
+                shp_Subject.notifyAll('OFF');//NOTIFY THE OBSERVERS
             }
           
             else if(!canSetAwayMode){
@@ -189,6 +190,7 @@ function setAwayMode(){
             else if (document.getElementById('awayModeButton').innerHTML == 'OFF') {
     
                 document.getElementById('awayModeButton').innerHTML = 'ON';
+                shp_Subject.notifyAll('ON');//NOTIFY THE OBSERVERS
                 controlAllDoor('close');
 
                 //save information to SHP log file
@@ -238,4 +240,59 @@ function writeToFile(msg){
 
     xhttp.open('POST', 'http://localhost:8080/api/user/shpWirter/' + msg, true);
     xhttp.send();
+}
+
+//----------------SHP Observer pattern ----------------------
+class SHP_Subject{
+    constructor(){
+        this.listOfObserver=[]
+    }
+    addObserver(obj){
+        this.listOfObserver.push(obj);
+        console.log(this.listOfObserver);//for testing
+    }
+    removeObserver(obj){
+        var index=this.listOfObserver.indexOf(obj);
+        if(index>=0){
+            var removedResult=this.listOfObserver.splice(index,1);//remove the observer
+            console.log(removedResult);//for testing
+            console.log(this.listOfObserver);
+        }
+        else console.log("Not found"+obj);
+    }
+    notifyAll(msg){//notify when away mode'status is changed
+        this.listOfObserver.forEach(an_observer => {
+            an_observer.update(msg);//pass the message to the observer for update
+            writeToFile("SHP sent to "+an_observer.getName()+": "+msg);
+            //writeToSHCFile("SHC sent to "+an_observer.getName()+" "+msg);
+        });
+    }
+}
+
+class SHP_observer{
+    constructor(obj){
+        this.obj=obj;//make a reference to the obj
+        this.name=obj.constructor.name; //take the name 
+        this.value="OFF";
+    }
+    getName(){
+        return this.name;
+    }
+    getAwayMode(){
+        return this.value;
+    }
+    /**
+     * According to the professor, SHH does nothing when receive the update
+     * @param {*} msg 
+     */
+    update(msg){
+        console.log(this.name+" received message from SHP: "+msg);
+        this.value=msg;//update the away mode value
+        try {
+            this.obj.setAwayMode(msg)//update SHH away mode status;
+        } catch (error) {
+            console.log("ERROR IN SHP OBSERVER: "+error);
+        }
+    }
+
 }

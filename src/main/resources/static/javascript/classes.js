@@ -97,7 +97,8 @@ function room(){
                 }
             }
             //no corresponding zone is found
-            return ' outer 24';
+            console.log(this.getName()+" has no zone");
+            return 24;
         }
     }
     //---------------------------Setters--------------------------
@@ -236,18 +237,20 @@ class Light extends door{
 }
 
 class HVAC extends door{
-    constructor(a_room){
+    constructor(a_room,a_heater){
         super("", "", "", a_room.min_width+15,a_room.min_height+15 ,"HVAC");
         this.room=a_room;//a "room" object
         this.x=parseInt(a_room.min_width)+10+"";
         this.y=parseInt(a_room.min_height)+30+"";
-        this.status="OFF"; //hardcode right now, later on will be based on the HVAC controller 
-        this.output=this.status+" || "+this.room.getTemperature();//print ON/OFF status
+        this.temp=this.room.getTemperature();
+        console.log("room temp: "+this.temp);
+        this.status=a_heater.state; //hardcode right now, later on will be based on the HVAC controller 
+        this.output=this.status+" || "+this.temp;//print ON/OFF status
+        this.heater=a_heater;
     }
-    // update(){
-    //     //display the text
-    //     var ctx = myGameArea.canvas.getContext("2d");
-    //     this.output=this.status+" || "+this.room.getTemperature();//print ON/OFF status 
-    //     ctx.fillText(this.output,this.x,this.y);
-    // }
+    //take the status
+    updateStatus(obj){
+        this.heater=obj;
+        this.status=obj.state;
+    }
 }

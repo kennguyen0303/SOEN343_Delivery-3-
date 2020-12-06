@@ -1,0 +1,28 @@
+SHC sent to SHH New location detected: kitchenNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: hallwayNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: garageNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: hallwayNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: kitchenNew number detected: 1
+
+SHC sent to SHH New location detected: kitchenNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: hallwayNew number detected: 1
+
+SHC sent to SHH New location detected: outside
+
+SHC sent to SHH New location detected: backyardNew number detected: 1
+

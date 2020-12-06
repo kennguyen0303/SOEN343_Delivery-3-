@@ -1,3 +1,5 @@
+// **************************
+
 class Zone{
     constructor(zoneID){
         this.zoneID = zoneID;
@@ -68,8 +70,172 @@ class PeriodicTempSetting {
     }
 }
 
+// Temperature Monitoring
+class HAVCStates{
+    static states = {
+      PAUSED: 'paused',
+      RUNNING: 'running',
+      STOPPED: 'stopped'
+    }
+}
+
+var heatingComponents = new Array();
+
+class HAVCController{
+
+    constructor(newZone,outdoorTemp,awaymode){
+        this.zone = newZone;
+        this.id = newZone.zoneID;
+        this.awayModeStatus=awaymode;//get the status from the SHH
+        this.state = HAVCStates.states.PAUSED;
+        this.outsideTemperature=outdoorTemp;
+    }
+
+    monitorTemperature(){
+        // var outsideTemperature = document.getElementById('outsideTemp').innerHTML;
+        // outsideTemperature=parseFloat(outsideTemperature);
+        var outsideTemperature=this.outsideTemperature;
+        //console.log("Monitor temperature outside have: "+outsideTemperature);
+        var tempSettings = (this.zone).getPeriodicTempSettings();
+        var idealTemperature = 18;
+        //console.log(tempSettings);
+
+        if(tempSettings != null){
+            for(let i = 0; i<tempSettings.length; i++){
+                //console.log(tempSetting[i].getStartTime()+" "+tempSettings[i].getEndTime());
+                var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() < varCurrentTime.getHours()) ;
+                if(isTime){
+                    idealTemperature = tempSettings[i].getTempSetting();
+                }
+            }
+        }
+
+        var rooms = this.zone.getAllRooms();
+        for(let i = 0; i< rooms.length; i++){
+            var room = rooms[i];
+
+            // functionality removed we should not reach this case
+            // check if windows have been closed since last temperature reading
+            if(this.state == HAVCStates.states.STOPPED){
+                 var indexes = rooms[i].window_index_array;
+                 var index = indexes[0];
+                 if(window_array[index]!= null && window_array[index].status == 'closed'){
+                    this.state = HAVCStates.states.RUNNING;
+                 }
+            }
+
+            // adjust temperature if the simulation is not stopped
+            if(this.state != HAVCStates.states.STOPPED){
+                var temperatureInRoom = rooms[i].getTemperature();
+                this.setHAVCState(idealTemperature, temperatureInRoom);
+
+                if(this.state == HAVCStates.states.RUNNING){
+                   var increase = (idealTemperature > temperatureInRoom);
+                   this.updateRoomTemperature(increase, 0.1, room);
+                }
+                else if(this.state == HAVCStates.states.PAUSED){
+                    var increase = (outsideTemperature > temperatureInRoom);
+                    this.updateRoomTemperature(increase, 0.05, room);
+                }
+            }
+
+            this.monitorPipes(temperatureInRoom);
+            this.monitorWindows(temperatureInRoom, outsideTemperature, room);
+        }
+        var heater = this;
+        setTimeout(function(){heater.monitorTemperature()}, temperatureTimeout);
+    }
+
+    monitorPipes(temperatureInRoom){
+        if(temperatureInRoom == 0){
+            // output to console
+            var consoleNode = document.createElement("p");
+            var text = "Caution! Temperature below zero. Pipes may burst."
+            var textNode =  document.createTextNode(text);
+            consoleNode.appendChild(textNode);
+            document.getElementById("outputConsole").appendChild(consoleNode);
+
+           // write to output log
+           writeToFile(text);
+        }
+    }
+
+    monitorWindows(temperatureInRoom, outsideTemperature, room){
+        if(temperatureInRoom >= outsideTemperature){
+            this.openWindowsInSummer(room);
+        }
+    }
+
+    setHAVCState(idealTemperature, temperatureInRoom)
+    {
+        if(Math.abs(idealTemperature - temperatureInRoom) > 1){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(Math.abs(idealTemperature - temperatureInRoom) >= 0.25){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(idealTemperature == temperatureInRoom){
+            this.state = HAVCStates.states.PAUSED;
+        }
+    }
+
+    openWindowsInSummer(room){
+         var seasonNum = varCurrentTime.getMonth();
+         var isSummer = false;
+         for(let i=0; i < summer_month.length; i++){
+            if(seasonNum == summer_month[i]){
+                isSummer = true;
+            }
+         }
+
+         if(isSummer){
+             if(this.getAwayModeStatus() == 'OFF'){
+                  var indexes = room.window_index_array;
+                  var index = indexes[0];
+                  if(window_array[index]!= null && window_array[index].status != 'open'){
+                      room.openWindow();
+                  }
+             }
+         }
+     }
+
+    updateRoomTemperature(increase, rate, room){
+        var currentTemp =  room.temperature;
+       if(this.state != HAVCStates.states.PAUSED || currentTemp != outsideTemp){
+          var tempPlus= Math.round((currentTemp + rate)*1e12)/1e12;
+          var tempMinus=Math.round((currentTemp - rate)*1e12)/1e12;
+          room.temperature = increase ? tempPlus: tempMinus;
+       }
+       for(var i=0;i<HVAC_array.length;i++){
+        HVAC_array[i].updateStatus(this);
+        HVAC_array[i].update();
+       }
+    }
+    /**
+     * update the outdoor temperature from SHH
+     * @param {} val 
+     */
+    updateOutsideTemp(val){
+        this.outsideTemperature=val;
+    }
+    /**
+     * update the away mode status from the SHH
+     * @param {*} msg 
+     */
+    updateAwayModeStatus(msg){
+        this.awayModeStatus=msg;
+    }
+    /**
+     * return the away mode
+     */
+    getAwayModeStatus(){
+        return this.awayModeStatus;
+    }
+}
+
 class SHH{
     constructor(outdoorTemp){
+        this.awayMode="OFF";//assuming OFF initially
         this.outdoorTemp = outdoorTemp;
         this.zones = new Array();
         for (let i = 0; i < 6; i++) {
@@ -78,6 +244,11 @@ class SHH{
             var tempSetting = new PeriodicTempSetting(0, '00:00', '00:00', 24.0)
             zone.periodicTempSettings.push(tempSetting);
             this.zones.push(zone);
+
+        // temperature monitoring
+        var heater = new HAVCController(zone,outdoorTemp,this.awayMode);
+        heater.monitorTemperature();
+        heatingComponents.push(heater);
         }
         //zones[0] is for unset rooms
     }
@@ -85,11 +256,32 @@ class SHH{
     getOutdoorTemp(){
         return this.outdoorTemp;
     }
-
+    /**
+     * update the outdoor temp for this SHH and all the heaters
+     * @param {*} outdoorTemp 
+     */
     setOutdoorTemp(outdoorTemp){
         this.outdoorTemp = outdoorTemp;
+        try {
+            heatingComponents.forEach(heater => {
+                heater.updateOutsideTemp(outdoorTemp);
+                console.log("Updating outdoor for heater: "+outdoorTemp);
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
-
+    /**
+     * Update the away mode status when there is a change
+     * Also update the status for all heater components
+     * @param {*} msg 
+     */
+    setAwayMode(msg){
+        this.awayMode=msg;
+        heatingComponents.forEach(heater => {
+            
+        });
+    }
     getAllZones(){
         return zones;
     }
@@ -107,9 +299,9 @@ class SHH{
         this.zones.push(newZone);
 
         // temperature monitoring
-        heater = new HAVCController(newZone);
-        heater.startMonitoring();
-        this.heatingComponents.push(heater);
+        // var heater = new HAVCController(newZone);
+        // heater.startMonitoring();
+        // heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
@@ -135,8 +327,13 @@ class SHH{
     }
 
 }
-//------ALEX---------CONFLICT-START
+//-----DEFINING OBJECTS------------
 var shh = new SHH('15.5');
+var shc_observer=new SHC_observer(shh);
+var shc_Subject = new SHC_Subject();
+shc_Subject.addObserver(shc_observer);//add the observer
+var shp_observer=new SHP_observer(shh);
+var shp_Subject = new SHP_Subject();
 
 // set the outside temperature according to user's input
 function submitOutsideTemp(){
@@ -412,6 +609,7 @@ function postTemp(){
         }
     });
 
+//<<<<<<< GUI_HVAC
     // if the desiredTemp is overriden
     if (whichRoom.isOverriden) {
         // display the desiredTemp stored in the room
@@ -435,6 +633,30 @@ function postTemp(){
             if(typeof whichZone.getPeriodicTempSettings()[2] != 'undefined'){
                 tempText += '(period 3<=>' +  whichZone.getPeriodicTempSettings()[2].getTempSetting() + ") ";
             }
+//=======
+//        if (room.getName() == roomCheck) {
+//            //console.log(room.getDesiredTemperature());
+//            var consoleNode = document.createElement("p");
+//            roomsTempVals = room.getDesiredTemperature();
+//            var alertText;
+//            if(room.isOverriden)
+//            {
+//                 alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + room.getDesiredTemperature();
+//             }
+//             else if(roomsTempVals.length>1){
+//                  alertText = varCurrentTime.toLocaleString("en-US") + " The temperature in the " + roomCheck + " is " + roomsTempVals[0].getTempSetting() + ", " + roomsTempVals[1].getTempSetting() + " and "  + roomsTempVals[2].getTempSetting();
+//             }
+//             else alertText="No zone, no setting -> Desired temp for this room is: "+room.getDesiredTemperature()+" by standard";
+//             //console.log(alertText);
+            
+//             if (room.isOverriden)
+//             {
+//                 alertText += " OVERRIDDEN";
+//             }           
+//             var consoleText = document.createTextNode(alertText);
+//             consoleNode.appendChild(consoleText);
+//             document.getElementById("outputConsole").appendChild(consoleNode);
+// >>>>>>> observer_pattern
         }
     }
 
@@ -496,6 +718,7 @@ function changeDesired(season)
     }
 }
 
+
 //This method will write msg to a give log file
 function writeToSHHFile(msg){
 
@@ -510,3 +733,4 @@ function writeToSHHFile(msg){
     xhttp.open('POST', 'http://localhost:8080/api/user/shhWirter/' + msg, true);
     xhttp.send();
 }
+
