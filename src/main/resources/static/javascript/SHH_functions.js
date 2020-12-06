@@ -1,3 +1,5 @@
+// **************************
+
 class Zone{
     constructor(zoneID){
         this.zoneID = zoneID;
@@ -68,6 +70,133 @@ class PeriodicTempSetting {
     }
 }
 
+//  NEWLY ADDED
+// enum for HAVC States
+class HAVCStates{
+    static states = {
+      PAUSED: 'paused',
+      RUNNING: 'running',
+      STOPPED: 'stopped' // might be redundant
+    }
+}
+
+var heatingComponents = new Array();
+
+class HAVCController{
+
+    constructor(newZone){
+        this.zone = newZone;
+        console.log(this.zone);
+        this.id = newZone.zoneID;
+        this.state = HAVCStates.states.PAUSED;
+    }
+
+    monitorTemperature(){
+        var outsideTemperature = document.getElementById('outsideTemp');
+        //console.log(this.zone);
+        var tempSettings = (this.zone).getPeriodicTempSettings();
+        var idealTemperature = 0;
+
+        if(tempSettings != null){
+            for(let i = 0; i<tempSettings.length; i++){
+                var isTime = (varCurrentTime.getHours() > tempSettings[i].getStartTime()) && (tempSettings[i].getEndTime() < varCurrentTime.getHours()) ;
+                if(isTime){
+                    idealTemperature = tempSettings[i].getTempSetting();
+                }
+            }
+        }
+
+        var rooms = this.zone.getAllRooms();
+        for(let i = 0; i< rooms.length; i++){
+
+            // check if windows have been closed since last temperature reading
+            if(this.state == HAVCStates.states.STOPPED){
+                 var index = rooms[i].window_index_array();
+                 if( window_index_array[index].status == 'closed'){ // TODO: VERIFY THAT THIS IS ACCURATE. Do we only have 1 window per room?
+                    this.state = HAVCStates.states.RUNNING;
+                 }
+            }
+
+            // adjust temperature if the simulation is not stopped
+            if(!this.state == HAVCStates.states.STOPPED){
+                var temperatureInRoom = rooms[i].getTemperature();
+                var increase;
+                setHAVCState(idealTemperature, temperatureInRoom);
+
+                if(this.state == HAVCStates.states.RUNNING){
+                   increase = (idealTemperature > temperatureInRoom);
+                   updateRoomTemperature(increase, 0.1, room);
+                }
+                else if(this.state == HAVCStates.states.PAUSED){
+                    increase = (outsideTemperature > temperatureInRoom);
+                    updateRoomTemperature(increase, 0.05, room);
+                }
+            }
+
+            monitorPipes(temperatureInRoom);
+            monitorWindows(temperatureInRoom, outsideTemperature);
+        }
+
+        setTimeout(this.monitorTemperature, temperatureTimeout);
+    }
+
+
+    startMonitoring(){
+        this.monitorTemperature();
+    }
+
+    monitorPipes(temperatureInRoom){
+        if(temperatureInRoom == 0){
+            // output to console
+            var consoleNode = document.createElement("p");
+            var text = "Caution! Temperature below zero. Pipes may burst."
+            var textNode =  document.createTextNode(text);
+            consoleNode.appendChild(textNode);
+            document.getElementById("outputConsole").appendChild(consoleNode);
+
+           // write to output log
+           writeToFile(text);
+        }
+    }
+
+    monitorWindows(temperatureInRoom, outsideTemperature){
+        if(temperatureInRoom > outsideTemperature){
+            //openWindowsInSummer(room);
+        }
+    }
+
+    setHAVCState(idealTemperature, temperatureInRoom)
+    {
+        if(Math.abs(idealTemperature - temperatureInRoom) > 1){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(Math.abs(idealTemperature - temperatureInRoom) >= 0.25){
+            this.state = HAVCStates.states.RUNNING;
+        }
+        else if(idealTemperature == temperatureInRoom){
+            this.state = HAVCStates.states.PAUSED;
+        }
+    }
+
+    openWindowsInSummer(room){
+         var currentSeason = getCurrentSeason();
+         if(currentSeason == Seasons.season.SUMMER){
+             if(document.getElementById('awayModeButton').innerHTML == 'OFF'){
+                this.state = HAVCStates.states.STOPPED;
+                room.openWindow(); // no parameters opens all windows in room
+             }
+         }
+     }
+
+    updateRoomTemperature(increase, rate, room){
+        var currentTemp =  room.getTemperature();
+
+       if(!this.state == HAVCStates.states.PAUSED || !currentTemp == outsideTemp){
+          room.temperature = increase ? (currentTemp + rate): (currentTemp - rate);
+       }
+    }
+}
+
 class SHH{
     constructor(outdoorTemp){
         this.outdoorTemp = outdoorTemp;
@@ -75,6 +204,11 @@ class SHH{
         for (let i = 0; i < 6; i++) {
             var zone = new Zone(i);
             this.zones.push(zone);
+
+        // temperature monitoring
+        var heater = new HAVCController(zone);
+        heater.startMonitoring();
+        heatingComponents.push(heater);
         }
         //zones[0] is for unset rooms
     }
@@ -104,9 +238,9 @@ class SHH{
         this.zones.push(newZone);
 
         // temperature monitoring
-        heater = new HAVCController(newZone);
-        heater.startMonitoring();
-        this.heatingComponents.push(heater);
+        // var heater = new HAVCController(newZone);
+        // heater.startMonitoring();
+        // heatingComponents.push(heater);
     }
 
     deleteZoneById(id){
@@ -464,3 +598,5 @@ function changeDesired(season)
         document.getElementById("summerDefault").innerHTML = "Desired summer temperature: " + desiredSummerTemp;
     }
 }
+
+
